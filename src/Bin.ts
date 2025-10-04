@@ -32,7 +32,7 @@ export class Bin extends Entity
             yOff: -8,
             layer: Layers.BIN
         })).onTriggerEnter.register((caller, data) => {
-            console.log(data.result)
+            // console.log(data.result)
             if (data.other.layer === Layers.FLIPPER)
             {
                 // Based on the relative position to the centre of the flipper, we want to adjust the launch angle

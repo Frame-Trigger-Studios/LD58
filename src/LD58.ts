@@ -42,6 +42,7 @@ export enum Layers
 
 const collisions = new CollisionMatrix();
 collisions.addCollision(Layers.FLIPPER, Layers.BIN);
+collisions.addCollision(Layers.TRASH, Layers.BIN);
 
 class TitleScene extends Scene
 {
@@ -80,6 +81,7 @@ export class MainScene extends Scene
         this.addFixedFnSystem(gravSystem)
         this.addFnSystem(rotSystem)
         this.addFnSystem(mode7System)
+        MainScene.collSystem = this.addGlobalSystem(new DiscreteCollisionSystem(collisions));
 
         this.addEntity(new Truck());
 
@@ -91,7 +93,6 @@ export class MainScene extends Scene
             }
         }))
 
-        MainScene.collSystem = this.addGlobalSystem(new DiscreteCollisionSystem(collisions));
 
         const road = this.addEntity(new Entity("road", 0, 0, Layers.ROAD_LINE));
         road.addComponent(new Timer(500, null, true)).onTrigger.register((caller, data) => {

@@ -1,18 +1,27 @@
-import {Component, Entity, Key, MathUtil, newSystem, Sprite, TextDisp, Timer, types} from "lagom-engine";
+import {
+    Component,
+    Entity,
+    Key,
+    MathUtil,
+    newSystem,
+    RectCollider,
+    RenderRect,
+    Sprite,
+    TextDisp,
+    Timer,
+    types
+} from "lagom-engine";
 import {Bin} from "./Bin.ts";
 import {Flipper} from "./Flipper.ts";
-import {Layers, LD58} from "./LD58.ts";
+import {Layers, LD58, MainScene} from "./LD58.ts";
 
-export class LeftFlipper extends Entity
-{
+export class LeftFlipper extends Entity {
 
-    constructor()
-    {
+    constructor() {
         super("LeftFlipper", -20, 15, Layers.TRUCK);
     }
 
-    onAdded()
-    {
+    onAdded() {
         super.onAdded();
 
         this.addComponent(new Sprite(this.scene.getGame().getResource("flipper").texture(0, 0), {
@@ -21,16 +30,13 @@ export class LeftFlipper extends Entity
     }
 }
 
-export class RightFlipper extends Entity
-{
+export class RightFlipper extends Entity {
 
-    constructor()
-    {
+    constructor() {
         super("RightFlipper", 18, 8, Layers.TRUCK);
     }
 
-    onAdded()
-    {
+    onAdded() {
         super.onAdded();
 
         this.addComponent(new Sprite(this.scene.getGame().getResource("flipper").texture(0, 0), {
@@ -67,6 +73,22 @@ export class Truck extends Entity
         this.addComponent(new Timer(1000, null, true)).onTrigger.register((caller, data) => {
             this.scene.addEntity(new Bin(60, 65));
         })
+
+        this.addComponent(new RenderRect(-18, -10, 36, 5, 0xff0000));
+        this.addComponent(new RectCollider(MainScene.collSystem, {
+            xOff: -18,
+            yOff: -10,
+            width: 36,
+            height: 5,
+            layer: Layers.TRASH
+        })).onTriggerEnter.register((caller, data) => {
+            // console.log(data.result)
+            if (data.other.layer === Layers.BIN)
+            {
+                // console.log("destroyed")
+                data.other.parent.destroy();
+            }
+        });
     }
 }
 
