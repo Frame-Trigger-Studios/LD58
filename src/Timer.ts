@@ -1,7 +1,8 @@
-import {Entity, System, TextDisp, Timer} from "lagom-engine";
+import {Entity, SysFn, System, TextDisp, Timer} from "lagom-engine";
 import {mode7System} from "./Scroller";
 import {Score, ScoreComponent} from "./Score";
 import {submitScore} from "./HighScores";
+import {MainScene} from "./LD58";
 
 export class TimerComponent extends TextDisp {
 
@@ -37,14 +38,16 @@ export class TimerDisplay extends Entity {
             fill: 0xffffff,
             fontSize: 8
         }));
-        const time = this.addComponent(new TimerComponent(35, 0, 10));
+        const time = this.addComponent(new TimerComponent(35, 0, 99));
         this.addComponent(new Timer(1000, time, true)).onTrigger.register((caller, data) => {
             data.decrement();
 
             if (data.finished()) {
                 caller.repeat = false;
-                const score = this.scene.getEntityWithName<Score>("scoreboard")?.getComponent<ScoreComponent>(ScoreComponent)?.score;
+                MainScene.gameOver = true;
 
+                const score = this.scene.getEntityWithName<Score>("Scoreboard")?.getComponent<ScoreComponent>(ScoreComponent)?.score;
+                console.log(score);
                 submitScore("test", score).then(value => {
                         console.log("success");
                         console.log(value);

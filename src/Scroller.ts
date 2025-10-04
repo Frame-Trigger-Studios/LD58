@@ -1,5 +1,5 @@
 import {Component, newSystem, Sprite, types} from "lagom-engine";
-import {LD58} from "./LD58.ts";
+import {LD58, MainScene} from "./LD58.ts";
 
 export class Mode7Me extends Component {
     constructor(readonly startX: number, readonly scale: number = 1) {
@@ -8,6 +8,10 @@ export class Mode7Me extends Component {
 }
 
 export const mode7System = newSystem(types(Mode7Me, Sprite), (delta, entity, m, spr) => {
+
+    if (MainScene.gameOver) {
+        return;
+    }
 
     const HORIZON_Y = 32;
     const TARGET_Y = HORIZON_Y + 0.8 * (LD58.GAME_HEIGHT - HORIZON_Y);

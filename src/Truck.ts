@@ -96,6 +96,9 @@ class Charger extends Component
 }
 
 const driveSystem = newSystem(types(Drive), (delta, entity, _) => {
+    if (MainScene.gameOver) {
+        return;
+    }
     const kb = entity.scene.game.keyboard;
     if (kb.isKeyDown(Key.KeyA))
     {
@@ -130,6 +133,9 @@ const jiggleSystem = newSystem(types(Sprite, Drive), (delta, entity, sprite, _) 
 
 
 const powerSystem = newSystem(types(Charger, TextDisp), (delta, entity, power, txt) => {
+    if (MainScene.gameOver) {
+        return;
+    }
     if (entity.scene.game.keyboard.isKeyDown(Key.Space))
     {
         power.level += delta * 0.08;

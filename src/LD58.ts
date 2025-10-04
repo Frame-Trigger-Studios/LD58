@@ -74,6 +74,8 @@ class TitleScene extends Scene
 export class MainScene extends Scene
 {
     static collSystem: DiscreteCollisionSystem;
+    // Bad (I cant work out how to destroy a functional system).
+    static gameOver: boolean = false;
 
     onAdded()
     {
