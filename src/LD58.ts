@@ -27,6 +27,7 @@ import treeSpr from "./art/tree.png";
 import {SoundManager} from "./util/SoundManager";
 import {Truck} from "./Truck.ts";
 import {gravSystem, rotSystem} from "./Physics.ts";
+import {Score} from "./Score.ts";
 import {Mode7Me, mode7System} from "./Scroller.ts";
 import {GameDirector} from "./GameDirector.ts";
 
@@ -77,6 +78,7 @@ export class MainScene extends Scene
         super.onAdded();
 
         this.addGUIEntity(new SoundManager());
+        this.addGUIEntity(new Score(2, 2, 0));
         this.addGlobalSystem(new TimerSystem());
         this.addGlobalSystem(new FrameTriggerSystem());
 
