@@ -23,7 +23,7 @@ export class Truck extends Entity
         this.addComponent(new Sprite(this.scene.game.getResource("truck").textureFromIndex(0), {
             xAnchor: 0.5, yAnchor: 0.5
         }))
-        this.addComponent(new RenderCircle(0, 0, 11));
+        // this.addComponent(new RenderCircle(0, 0, 11));
 
         this.addComponent(new Timer(1000, null, true)).onTrigger.register((caller, data) => {
             this.scene.addEntity(new Bin(60, 80));
