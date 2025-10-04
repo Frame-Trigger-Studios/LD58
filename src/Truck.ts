@@ -6,7 +6,7 @@ export class Truck extends Entity
 {
     constructor()
     {
-        super("truck", 50, 80);
+        super("truck", 50, 60);
     }
 
     onAdded()
@@ -20,6 +20,9 @@ export class Truck extends Entity
         this.addComponent(new Charger());
 
         this.addComponent(new TextDisp(0, -40, "POWER", {fontSize: 5, fill: "white"}));
+        this.addComponent(new Sprite(this.scene.game.getResource("truck").textureFromIndex(0), {
+            xAnchor: 0.5, yAnchor: 0.5
+        }))
         this.addComponent(new RenderCircle(0, 0, 11));
 
         this.addComponent(new Timer(1000, null, true)).onTrigger.register((caller, data) => {
