@@ -18,6 +18,7 @@ import muteButtonSpr from "./art/mute_button.png";
 import binSpr from "./art/bin.png";
 import background from "./art/background.png";
 import truckSpr from "./art/truck.png";
+import flipper from "./art/flipper.png";
 import {SoundManager} from "./util/SoundManager";
 import {Truck} from "./Truck.ts";
 import {gravSystem, rotSystem} from "./Physics.ts";
@@ -26,8 +27,8 @@ import {gravSystem, rotSystem} from "./Physics.ts";
 export enum Layers
 {
     BACKGROUND,
-    TRUCK,
     FLIPPER,
+    TRUCK,
     BIN,
     TRASH,
     SOLIDS
@@ -112,7 +113,8 @@ export class LD58 extends Game
         this.addResource("mute_button", new SpriteSheet(muteButtonSpr, 16, 16));
         this.addResource("bin", new SpriteSheet(binSpr, 13, 17));
         this.addResource("truck", new SpriteSheet(truckSpr, 44, 51))
-        this.addResource("background", new SpriteSheet(background, 160, 100))
+        this.addResource("background", new SpriteSheet(background, 160, 100));
+        this.addResource("flipper", new SpriteSheet(flipper, 30, 7));
 
         // Load an empty scene while we async load the resources for the main one
         this.setScene(new Scene(this));

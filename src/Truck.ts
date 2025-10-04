@@ -27,7 +27,7 @@ export class Truck extends Entity
         // this.addComponent(new RenderCircle(0, 0, 11));
 
         this.addComponent(new Timer(1000, null, true)).onTrigger.register((caller, data) => {
-            this.scene.addEntity(new Bin(60, 80));
+            this.scene.addEntity(new Bin(60, 65));
         })
     }
 }
@@ -62,8 +62,8 @@ const powerSystem = newSystem(types(Charger, TextDisp), (delta, entity, power, t
     }
     if (entity.scene.game.keyboard.isKeyReleased(Key.Space))
     {
-        entity.addChild(new Flipper(-35, 20, power.level))
-        entity.addChild(new Flipper(35, 20, power.level))
+        entity.addChild(new Flipper(-50, 10, power.level, true))
+        entity.addChild(new Flipper(50, 10, power.level, false))
         power.level = 0;
     }
 
