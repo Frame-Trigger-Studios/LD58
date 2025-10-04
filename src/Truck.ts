@@ -9,7 +9,7 @@ export class LeftFlipper extends Entity
 
     constructor()
     {
-        super("LeftFlipper", -20, 15, Layers.TRUCK);
+        super("LeftFlipper", -10, 15, Layers.FLIPPER);
     }
 
     onAdded()
@@ -27,7 +27,7 @@ export class RightFlipper extends Entity
 
     constructor()
     {
-        super("RightFlipper", 18, 8, Layers.TRUCK);
+        super("RightFlipper", 10, 8, Layers.FLIPPER);
     }
 
     onAdded()

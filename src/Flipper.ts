@@ -12,11 +12,11 @@ export class Flipper extends Entity
     {
         super.onAdded();
         let xscale = 1;
-        let xoff = 0;
+        let xoff = -20;
 
         if (this.side == -1) {
             xscale = -1;
-            xoff = -10;
+            xoff = 10;
         }
 
         this.addComponent(new RenderRect(xoff, 0,  10, 6));
