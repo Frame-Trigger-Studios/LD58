@@ -14,10 +14,11 @@ export class GameDirector extends Entity
     {
         super.onAdded();
 
-        this.addComponent(new Timer(1000, null, true)).onTrigger.register((caller, data) => {
-            this.scene.addEntity(new Bin(-70, 32));
-            this.scene.addEntity(new Bin(70, 32));
-        })
+        this.addComponent(new Timer(1500, null, true)).onTrigger.register((caller, data) => {
+            let side = MathUtil.randomRange(0, 2) ? -1 : 1;
+            let x = MathUtil.randomRange(50, 90);
+            this.scene.addEntity(new Bin(x * side, 32));
+        });
 
         queueTree(this);
         queueSign(this);

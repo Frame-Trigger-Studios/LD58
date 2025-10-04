@@ -57,7 +57,7 @@ export class Bin extends Entity
                 const flip = data.other.parent.getComponent<FlipVals>(FlipVals);
                 if (flip == null) return;
 
-                phys.yVel = - 50 + -flip.power * 2;
+                phys.yVel = - 75 + -flip.power * 2;
 
                 let dist = 0;
 
