@@ -1,25 +1,46 @@
 import {Component, Entity, RectCollider, RenderCircle, RenderRect, Timer} from "lagom-engine";
 import {Layers, MainScene} from "./LD58.ts";
+import {Component, Entity, RectCollider, RenderRect, Sprite, Timer} from "lagom-engine";
+import {Layers, LD58, MainScene} from "./LD58.ts";
 
 export class Flipper extends Entity
 {
     constructor(x: number, y: number, readonly power: number, readonly side: number)
     {
-        super("flipper", x, y);
+        super("flipper", x, y, Layers.FLIPPER);
     }
 
     onAdded()
     {
         super.onAdded();
+        let xscale = 1;
+        let xoff = 0;
 
-        this.addComponent(new RenderRect(-10, 0, 20, 2));
-        // this.addComponent(new RenderCircle(-10 * this.side, 0, 4));
+        if (this.side) {
+            xscale = -1;
+            xoff = -10;
+        }
+
+
+        let xscale = 1;
+        let xoff = 0;
+
+        if (!this.right) {
+            xscale = -1;
+            xoff = -10;
+        }
+
+        this.addComponent(new RenderRect(xoff, 0,  10, 6));
+        this.addComponent(new Sprite(this.scene.getGame().getResource("flipper").texture(0, 0), {
+            xScale: xscale
+        }));
+
         this.addComponent(new FlipVals(this.power, this.side));
         this.addComponent(new RectCollider(MainScene.collSystem, {
-            xOff: -10,
+            xOff: xoff,
             yOff: 0,
-            width: 20,
-            height: 2,
+            width: 10,
+            height: 6,
             layer: Layers.FLIPPER
         }))
         this.addComponent(new Timer(100, null)).onTrigger.register((caller, data) => {
