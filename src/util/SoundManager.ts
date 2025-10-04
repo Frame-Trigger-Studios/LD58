@@ -1,6 +1,6 @@
 import {AnimatedSpriteController, Button, Component, CType, Entity, Key, System, Timer} from "lagom-engine";
 
-import {GameTemplate} from "../GameTemplate.ts";
+import {LD58} from "../LD58.ts";
 
 class MuteComp extends Component {
 }
@@ -12,20 +12,20 @@ class MuteListener extends System<[AnimatedSpriteController, MuteComp]> {
         if (this.scene.game.mouse.isButtonPressed(Button.LEFT)) {
             const pos = e.scene.game.renderer.plugins.interaction.mouse.global;
 
-            if (pos.x >= GameTemplate.GAME_WIDTH - 24 && pos.x <= GameTemplate.GAME_WIDTH - 8 && pos.y >= GameTemplate.GAME_HEIGHT - 24 && pos.y <= GameTemplate.GAME_HEIGHT - 8) {
+            if (pos.x >= LD58.GAME_WIDTH - 24 && pos.x <= LD58.GAME_WIDTH - 8 && pos.y >= LD58.GAME_HEIGHT - 24 && pos.y <= LD58.GAME_HEIGHT - 8) {
                 (e.scene.getEntityWithName("audio") as SoundManager).toggleMute();
-                spr.setAnimation(Number(GameTemplate.muted));
+                spr.setAnimation(Number(LD58.muted));
             }
         } else if (this.scene.game.keyboard.isKeyPressed(Key.KeyM)) {
             (e.scene.getEntityWithName("audio") as SoundManager).toggleMute();
-            spr.setAnimation(Number(GameTemplate.muted));
+            spr.setAnimation(Number(LD58.muted));
         }
     }
 }
 
 export class SoundManager extends Entity {
     constructor() {
-        super("audio", GameTemplate.GAME_WIDTH - 16 - 8, GameTemplate.GAME_HEIGHT - 24, 0);
+        super("audio", LD58.GAME_WIDTH - 16 - 8, LD58.GAME_HEIGHT - 24, 0);
         this.startMusic();
     }
 
@@ -33,7 +33,7 @@ export class SoundManager extends Entity {
         super.onAdded();
 
         this.addComponent(new MuteComp());
-        const spr = this.addComponent(new AnimatedSpriteController(Number(GameTemplate.muted), [
+        const spr = this.addComponent(new AnimatedSpriteController(Number(LD58.muted), [
             {
                 id: 0,
                 textures: [this.scene.game.getResource("mute_button").texture(0, 0, 16, 16)]
@@ -43,16 +43,16 @@ export class SoundManager extends Entity {
             }]));
 
         this.addComponent(new Timer(50, spr, false)).onTrigger.register((caller, data) => {
-            data.setAnimation(Number(GameTemplate.muted));
+            data.setAnimation(Number(LD58.muted));
         });
 
         this.scene.addSystem(new MuteListener());
     }
 
     toggleMute() {
-        GameTemplate.muted = !GameTemplate.muted;
+        LD58.muted = !LD58.muted;
 
-        if (GameTemplate.muted) {
+        if (LD58.muted) {
             this.stopAllSounds();
         } else {
             this.startMusic();
@@ -60,18 +60,18 @@ export class SoundManager extends Entity {
     }
 
     startMusic() {
-        if (!GameTemplate.muted && !GameTemplate.musicPlaying) {
-            GameTemplate.audioAtlas.play("music");
-            GameTemplate.musicPlaying = true;
+        if (!LD58.muted && !LD58.musicPlaying) {
+            LD58.audioAtlas.play("music");
+            LD58.musicPlaying = true;
         }
     }
 
     stopAllSounds(music = true) {
         if (music) {
-            GameTemplate.audioAtlas.sounds.forEach((v: any, k: string) => v.stop());
-            GameTemplate.musicPlaying = false;
+            LD58.audioAtlas.sounds.forEach((v: any, k: string) => v.stop());
+            LD58.musicPlaying = false;
         } else {
-            GameTemplate.audioAtlas.sounds.forEach((v: any, k: string) => {
+            LD58.audioAtlas.sounds.forEach((v: any, k: string) => {
                 if (k !== "music") v.stop();
             });
         }
@@ -83,14 +83,14 @@ export class SoundManager extends Entity {
     }
 
     playSound(name: string, restart = false) {
-        if (!GameTemplate.muted) {
-            if (GameTemplate.audioAtlas.sounds.get(name)?.playing() && !restart) return;
-            GameTemplate.audioAtlas.play(name);
+        if (!LD58.muted) {
+            if (LD58.audioAtlas.sounds.get(name)?.playing() && !restart) return;
+            LD58.audioAtlas.play(name);
         }
     }
 
     stopSound(name: string) {
-        GameTemplate.audioAtlas.sounds.forEach((value, key) => {
+        LD58.audioAtlas.sounds.forEach((value, key) => {
             if (key === name) {
                 value.stop();
             }

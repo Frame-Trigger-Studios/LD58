@@ -50,9 +50,9 @@ class MainScene extends Scene {
     }
 }
 
-export class GameTemplate extends Game {
-    static GAME_WIDTH = 512;
-    static GAME_HEIGHT = 512;
+export class LD58 extends Game {
+    static GAME_WIDTH = 160;
+    static GAME_HEIGHT = 100;
 
     static muted = false;
     static musicPlaying = false;
@@ -60,9 +60,9 @@ export class GameTemplate extends Game {
 
     constructor() {
         super({
-            width: GameTemplate.GAME_WIDTH,
-            height: GameTemplate.GAME_HEIGHT,
-            resolution: 1,
+            width: LD58.GAME_WIDTH,
+            height: LD58.GAME_HEIGHT,
+            resolution: 6,
             backgroundColor: 0x200140
         });
 
@@ -75,7 +75,7 @@ export class GameTemplate extends Game {
         this.setScene(new Scene(this));
 
         // Import sounds and set their properties
-        // const music = GameTemplate.audioAtlas.load("music", "ADD_ME")
+        // const music = LD58.audioAtlas.load("music", "ADD_ME")
         //     .loop(true)
         //     .volume(0.3);
 
