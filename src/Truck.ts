@@ -20,7 +20,7 @@ export class Truck extends Entity
         this.addComponent(new Drive());
         this.addComponent(new Charger());
 
-        this.addComponent(new TextDisp(0, -40, "POWER", {fontSize: 5, fill: "white"}));
+        this.addComponent(new TextDisp(0, -40, "POWER", {fontSize: 5, fill: "black"}));
         this.addComponent(new Sprite(this.scene.game.getResource("truck").textureFromIndex(0), {
             xAnchor: 0.5, yAnchor: 0.5
         }))
