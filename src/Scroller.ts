@@ -3,7 +3,7 @@ import {LD58} from "./LD58.ts";
 
 export class Mode7Me extends Component
 {
-    constructor(readonly startX: number)
+    constructor(readonly startX: number, readonly scale: number = 1)
     {
         super();
     }
@@ -22,6 +22,8 @@ export const mode7System = newSystem(types(Mode7Me, Sprite), (delta, entity, m, 
 
     entity.transform.y += delta * 0.05 * scale_factor;
     entity.transform.x = x;
+
+    scale_factor *= m.scale;
 
     spr.applyConfig({xScale: scale_factor, yScale: scale_factor})
 })
