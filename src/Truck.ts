@@ -4,7 +4,7 @@ import {
     Component,
     Entity,
     Key, MathUtil,
-    newSystem,
+    newSystem, RectCollider, RenderRect,
     Sprite,
     TextDisp,
     Timer,
@@ -12,7 +12,7 @@ import {
 } from "lagom-engine";
 import {Bin} from "./Bin.ts";
 import {Flipper} from "./Flipper.ts";
-import {Layers} from "./LD58.ts";
+import {Layers, MainScene} from "./LD58.ts";
 
 export class LeftFlipper extends Entity {
 
@@ -72,6 +72,22 @@ export class Truck extends Entity
         this.addComponent(new Timer(1000, null, true)).onTrigger.register((caller, data) => {
             this.scene.addEntity(new Bin(60, 65));
         })
+
+        this.addComponent(new RenderRect(-18, -10, 36, 5, 0xff0000));
+        this.addComponent(new RectCollider(MainScene.collSystem, {
+            xOff: -18,
+            yOff: -10,
+            width: 36,
+            height: 5,
+            layer: Layers.TRASH
+        })).onTriggerEnter.register((caller, data) => {
+            // console.log(data.result)
+            if (data.other.layer === Layers.BIN)
+            {
+                // console.log("destroyed")
+                data.other.parent.destroy();
+            }
+        });
     }
 }
 

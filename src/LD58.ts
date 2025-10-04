@@ -36,6 +36,7 @@ export enum Layers
 
 const collisions = new CollisionMatrix();
 collisions.addCollision(Layers.FLIPPER, Layers.BIN);
+collisions.addCollision(Layers.TRASH, Layers.BIN);
 
 class TitleScene extends Scene
 {
@@ -75,9 +76,9 @@ export class MainScene extends Scene
         this.addFixedFnSystem(gravSystem)
         this.addFnSystem(rotSystem)
 
-        this.addEntity(new Truck());
-
         MainScene.collSystem = this.addGlobalSystem(new DiscreteCollisionSystem(collisions));
+
+        this.addEntity(new Truck());
 
         // this.addGUIEntity(new Entity("main scene")).addComponent(new TextDisp(100, 10, "MAIN SCENE", {
         //     fontFamily: "pixeloid",
