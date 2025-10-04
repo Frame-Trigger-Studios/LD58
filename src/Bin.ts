@@ -1,4 +1,4 @@
-import {Entity, MathUtil, RectCollider, RenderRect, Sprite} from "lagom-engine";
+import {Entity, MathUtil, RectCollider, Sprite} from "lagom-engine";
 import {Layers, MainScene} from "./LD58.ts";
 import {Gravity, Phys} from "./Physics.ts";
 import {Power} from "./Flipper.ts";
@@ -7,7 +7,7 @@ export class Bin extends Entity
 {
     constructor(x: number, y: number)
     {
-        super("bin", x, y);
+        super("bin", x, y, Layers.BIN);
     }
 
     onAdded()

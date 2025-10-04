@@ -1,12 +1,13 @@
 import {Component, Entity, Key, newSystem, RenderCircle, Sprite, TextDisp, Timer, types} from "lagom-engine";
 import {Bin} from "./Bin.ts";
 import {Flipper} from "./Flipper.ts";
+import {Layers} from "./LD58.ts";
 
 export class Truck extends Entity
 {
     constructor()
     {
-        super("truck", 50, 60);
+        super("truck", 50, 60, Layers.TRUCK);
     }
 
     onAdded()
@@ -19,14 +20,14 @@ export class Truck extends Entity
         this.addComponent(new Drive());
         this.addComponent(new Charger());
 
-        this.addComponent(new TextDisp(0, -40, "POWER", {fontSize: 5, fill: "white"}));
+        this.addComponent(new TextDisp(0, -40, "POWER", {fontSize: 5, fill: "black"}));
         this.addComponent(new Sprite(this.scene.game.getResource("truck").textureFromIndex(0), {
             xAnchor: 0.5, yAnchor: 0.5
         }))
         // this.addComponent(new RenderCircle(0, 0, 11));
 
         this.addComponent(new Timer(1000, null, true)).onTrigger.register((caller, data) => {
-            this.scene.addEntity(new Bin(60, 80));
+            this.scene.addEntity(new Bin(60, 65));
         })
     }
 }
@@ -61,7 +62,8 @@ const powerSystem = newSystem(types(Charger, TextDisp), (delta, entity, power, t
     }
     if (entity.scene.game.keyboard.isKeyReleased(Key.Space))
     {
-        entity.addChild(new Flipper(-10, 0, power.level))
+        entity.addChild(new Flipper(-50, 10, power.level, true))
+        entity.addChild(new Flipper(50, 10, power.level, false))
         power.level = 0;
     }
 
