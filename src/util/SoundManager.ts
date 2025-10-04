@@ -84,7 +84,7 @@ export class SoundManager extends Entity {
 
     playSound(name: string, restart = false) {
         if (!LD58.muted) {
-            if (LD58.audioAtlas.sounds.get(name)?.playing() && !restart) return;
+            if (LD58.audioAtlas.sounds.get(name)?.isPlaying && !restart) return;
             LD58.audioAtlas.play(name);
         }
     }
