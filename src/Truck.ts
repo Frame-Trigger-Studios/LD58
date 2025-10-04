@@ -70,10 +70,6 @@ export class Truck extends Entity
         this.addChild(new RightFlipper());
         // this.addComponent(new RenderCircle(0, 0, 11));
 
-        this.addComponent(new Timer(1000, null, true)).onTrigger.register((caller, data) => {
-            this.scene.addEntity(new Bin(60, 65));
-        })
-
         this.addComponent(new RenderRect(-18, -10, 36, 5, 0xff0000));
         this.addComponent(new RectCollider(MainScene.collSystem, {
             xOff: -18,

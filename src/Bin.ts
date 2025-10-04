@@ -2,6 +2,7 @@ import {Entity, MathUtil, RectCollider, RenderCircle, Sprite, VariantSprite} fro
 import {Layers, MainScene} from "./LD58.ts";
 import {Gravity, Phys} from "./Physics.ts";
 import {FlipVals} from "./Flipper.ts";
+import {Mode7Me} from "./Scroller.ts";
 
 export class Bin extends Entity
 {
@@ -13,6 +14,8 @@ export class Bin extends Entity
     onAdded()
     {
         super.onAdded();
+
+        this.addComponent(new Mode7Me(this.transform.x));
 
         // Bin.
         this.addComponent(new Sprite(this.scene.game.getResource("bin").textureFromIndex(0), {
@@ -59,10 +62,11 @@ export class Bin extends Entity
                 if (caller.parent.getComponent(Gravity) == null)
                 {
                     this.addComponent(new Gravity());
+                    this.getComponent(Mode7Me)?.destroy();
                 }
             }
         });
 
-        this.addComponent(new RenderCircle(0, 0, 3));
+        // this.addComponent(new RenderCircle(0, 0, 3));
     }
 }

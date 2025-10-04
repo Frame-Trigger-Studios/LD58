@@ -27,6 +27,7 @@ import {SoundManager} from "./util/SoundManager";
 import {Truck} from "./Truck.ts";
 import {gravSystem, rotSystem} from "./Physics.ts";
 import {Mode7Me, mode7System} from "./Scroller.ts";
+import {GameDirector} from "./GameDirector.ts";
 
 
 export enum Layers
@@ -84,6 +85,8 @@ export class MainScene extends Scene
         MainScene.collSystem = this.addGlobalSystem(new DiscreteCollisionSystem(collisions));
 
         this.addEntity(new Truck());
+        this.addEntity(new GameDirector());
+
 
         // @ts-ignore
         this.addFixedFnSystem(newSystem(types(Component), (delta, entity, _) => {
