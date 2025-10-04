@@ -53,26 +53,12 @@ export class Bin extends Entity
             // console.log(data.result)
             if (data.other.layer === Layers.FLIPPER)
             {
-                // Based on the relative position to the centre of the flipper, we want to adjust the launch angle
                 const flip = data.other.parent.getComponent<FlipVals>(FlipVals);
                 if (flip == null) return;
 
                 phys.yVel = - 75 + -flip.power * 2;
-
-                let dist = 0;
-
-                // Left
-                if (flip.side === -1)
-                {
-                    dist = (data.other.body.x + 10) - caller.body.x
-                } else
-                {
-                    dist = ((data.other.body.x - 10) - caller.body.x) * -1;
-                }
-
-                console.log(dist)
-                phys.xVel = MathUtil.randomRange(-50, 50);
-                phys.rot = MathUtil.randomRange(-10, 10);
+                phys.xVel = MathUtil.randomRange(10, 80) * -flip.side;
+                phys.rot = MathUtil.randomRange(2, 10) * -flip.side;
 
                 if (caller.parent.getComponent(Gravity) == null)
                 {
