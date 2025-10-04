@@ -18,7 +18,8 @@ import muteButtonSpr from "./art/mute_button.png";
 import binSpr from "./art/bin.png";
 import background from "./art/game.png";
 import {SoundManager} from "./util/SoundManager";
-import {Truck} from "./Garbage.ts";
+import {Truck} from "./Truck.ts";
+import {gravSystem, rotSystem} from "./Physics.ts";
 
 
 export enum Layers
@@ -67,6 +68,10 @@ export class MainScene extends Scene
         this.addGUIEntity(new SoundManager());
         this.addGlobalSystem(new TimerSystem());
         this.addGlobalSystem(new FrameTriggerSystem());
+
+        this.addFixedFnSystem(gravSystem)
+        this.addFnSystem(rotSystem)
+
         this.addEntity(new Truck());
 
         MainScene.collSystem = this.addGlobalSystem(new DiscreteCollisionSystem(collisions));
