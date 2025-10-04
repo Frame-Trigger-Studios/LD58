@@ -31,6 +31,7 @@ import {gravSystem, rotSystem} from "./Physics.ts";
 import {Score} from "./Score.ts";
 import {Mode7Me, mode7System} from "./Scroller.ts";
 import {GameDirector} from "./GameDirector.ts";
+import {TimerDisplay} from "./Timer";
 
 
 export enum Layers
@@ -80,6 +81,7 @@ export class MainScene extends Scene
 
         this.addGUIEntity(new SoundManager());
         this.addGUIEntity(new Score(2, 2, 0));
+        this.addGUIEntity(new TimerDisplay(LD58.GAME_WIDTH - 60, 2, 0))
         this.addGlobalSystem(new TimerSystem());
         this.addGlobalSystem(new FrameTriggerSystem());
 

@@ -2,7 +2,7 @@ import {Entity, TextDisp} from "lagom-engine";
 
 export class ScoreComponent extends TextDisp {
 
-    constructor(xOff: number, yOff: number, private score: number) {
+    constructor(xOff: number, yOff: number, public score: number) {
         super(xOff, yOff, score.toString(), {
             fontFamily: "retro",
             fill: 0xffffff,
