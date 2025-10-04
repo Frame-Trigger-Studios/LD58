@@ -14,7 +14,11 @@ export class GameDirector extends Entity
     {
         super.onAdded();
 
-        this.addComponent(new Timer(1000, null, true)).onTrigger.register((caller, data) => {
+        this.addComponent(new Timer(1500, null, true)).onTrigger.register((caller, data) => {
+            let side = Util.choose(-1, 1);
+            let x = MathUtil.randomRange(25, 35);
+            this.scene.addEntity(new Bin(x * side, 32));
+
             this.scene.addEntity(new Bin(-30, 32));
             this.scene.addEntity(new Bin(30, 32));
         })
@@ -26,7 +30,7 @@ export class GameDirector extends Entity
 
 function queueTree(entity: Entity)
 {
-    entity.addComponent(new Timer(MathUtil.randomRange(50, 150), null, false)).onTrigger.register((caller, data) => {
+    entity.addComponent(new Timer(MathUtil.randomRange(250, 450), null, false)).onTrigger.register((caller, data) => {
         const x = Util.choose(MathUtil.randomRange(35, 80), MathUtil.randomRange(-35, -80));
         const tree = entity.scene.addEntity(new Entity("tree", x, 32));
         tree.addComponent(new VariantSprite(entity.scene.game.getResource("trees").textureSliceFromSheet(), {xAnchor: 0.5, yAnchor: 1}));
