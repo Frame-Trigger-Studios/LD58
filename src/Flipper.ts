@@ -1,4 +1,4 @@
-import {Component, Entity, RectCollider, RenderRect, Sprite, Timer} from "lagom-engine";
+import {Component, Entity, MathUtil, RectCollider, RenderRect, Sprite, Timer} from "lagom-engine";
 import {Layers, LD58, MainScene} from "./LD58.ts";
 
 export class Flipper extends Entity
@@ -20,9 +20,9 @@ export class Flipper extends Entity
         }
 
         this.addComponent(new RenderRect(xoff, 0,  10, 6));
-        this.addComponent(new Sprite(this.scene.getGame().getResource("flipper").texture(0, 0), {
-            xScale: xscale
-        }));
+        // this.addComponent(new Sprite(this.scene.getGame().getResource("flipper").texture(0, 0), {
+        //     xScale: xscale
+        // }));
 
         this.addComponent(new FlipVals(this.power, this.side));
         this.addComponent(new RectCollider(MainScene.collSystem, {
@@ -34,6 +34,12 @@ export class Flipper extends Entity
         }))
         this.addComponent(new Timer(100, null)).onTrigger.register((caller, data) => {
             caller.parent.destroy()
+            caller.parent.scene.getEntityWithName("LeftFlipper")?.getComponent<Sprite>(Sprite)?.applyConfig({
+                rotation: MathUtil.degToRad(0),
+            });
+            caller.parent.scene.getEntityWithName("RightFlipper")?.getComponent<Sprite>(Sprite)?.applyConfig({
+                rotation: MathUtil.degToRad(0)
+            });
         });
     }
 }
