@@ -1,7 +1,8 @@
-import {Entity, MathUtil, RectCollider, Sprite} from "lagom-engine";
+import {Entity, MathUtil, RectCollider, RenderCircle, Sprite, VariantSprite} from "lagom-engine";
 import {Layers, MainScene} from "./LD58.ts";
 import {Gravity, Phys} from "./Physics.ts";
-import {Power} from "./Flipper.ts";
+import {FlipVals} from "./Flipper.ts";
+import {Mode7Me} from "./Scroller.ts";
 
 export class Bin extends Entity
 {
@@ -14,9 +15,7 @@ export class Bin extends Entity
     {
         super.onAdded();
 
-        // this.addComponent(new Gravity());
-
-        // this.addComponent(new RenderRect(-5, -8, 9, 16, null, 0xffffff));
+        this.addComponent(new Mode7Me(this.transform.x));
 
         // Bin.
         this.addComponent(new Sprite(this.scene.game.getResource("bin").textureFromIndex(0), {
@@ -24,9 +23,7 @@ export class Bin extends Entity
             yAnchor: 0.5
         }))
 
-        // Lid. - 0, 1, or 2.
-        const lidColour = Math.floor(Math.random() * 3);
-        this.addComponent(new Sprite(this.scene.game.getResource("bin").texture(lidColour, 1, 13, 17), {
+        this.addComponent(new VariantSprite(this.scene.game.getResource("bin").textureSliceFromRow(1, 0, 2), {
             xAnchor: 0.5,
             yAnchor: 0.5
         }))
@@ -38,22 +35,38 @@ export class Bin extends Entity
             yOff: -8,
             layer: Layers.BIN
         })).onTriggerEnter.register((caller, data) => {
-            console.log(data.result)
+            // console.log(data.result)
             if (data.other.layer === Layers.FLIPPER)
             {
                 // Based on the relative position to the centre of the flipper, we want to adjust the launch angle
-                const power = data.other.parent.getComponent<Power>(Power);
-                if (power == null) return;
+                const flip = data.other.parent.getComponent<FlipVals>(FlipVals);
+                if (flip == null) return;
 
-                phys.yVel = -power.value * 2;
+                phys.yVel = - 100 + -flip.power * 2;
+
+                let dist = 0;
+
+                // Left
+                if (flip.side === -1)
+                {
+                    dist = (data.other.body.x + 10) - caller.body.x
+                } else
+                {
+                    dist = ((data.other.body.x - 10) - caller.body.x) * -1;
+                }
+
+                console.log(dist)
                 phys.xVel = MathUtil.randomRange(-50, 50);
                 phys.rot = MathUtil.randomRange(-10, 10);
 
                 if (caller.parent.getComponent(Gravity) == null)
                 {
                     this.addComponent(new Gravity());
+                    this.getComponent(Mode7Me)?.destroy();
                 }
             }
         });
+
+        // this.addComponent(new RenderCircle(0, 0, 3));
     }
 }

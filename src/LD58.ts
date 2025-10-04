@@ -1,32 +1,39 @@
 import {
     ActionOnPress,
     AudioAtlas,
-    CollisionMatrix,
+    CollisionMatrix, Component,
     DiscreteCollisionSystem,
     Entity,
     FrameTriggerSystem,
     Game,
     Log,
     LogLevel,
-    Scene, Sprite,
+    newSystem,
+    Scene,
+    Sprite,
     SpriteSheet,
     TextDisp,
-    TimerSystem
+    Timer,
+    TimerSystem, types
 } from 'lagom-engine';
 import WebFont from 'webfontloader';
 import muteButtonSpr from "./art/mute_button.png";
 import binSpr from "./art/bin.png";
 import background from "./art/background.png";
 import truckSpr from "./art/truck.png";
+import roadLineSpr from "./art/road-line.png";
 import flipper from "./art/flipper.png";
 import {SoundManager} from "./util/SoundManager";
 import {Truck} from "./Truck.ts";
 import {gravSystem, rotSystem} from "./Physics.ts";
+import {Mode7Me, mode7System} from "./Scroller.ts";
+import {GameDirector} from "./GameDirector.ts";
 
 
 export enum Layers
 {
     BACKGROUND,
+    ROAD_LINE,
     FLIPPER,
     TRUCK,
     BIN,
@@ -36,6 +43,7 @@ export enum Layers
 
 const collisions = new CollisionMatrix();
 collisions.addCollision(Layers.FLIPPER, Layers.BIN);
+collisions.addCollision(Layers.TRASH, Layers.BIN);
 
 class TitleScene extends Scene
 {
@@ -59,7 +67,6 @@ class TitleScene extends Scene
 }
 
 
-
 export class MainScene extends Scene
 {
     static collSystem: DiscreteCollisionSystem;
@@ -74,10 +81,29 @@ export class MainScene extends Scene
 
         this.addFixedFnSystem(gravSystem)
         this.addFnSystem(rotSystem)
+        this.addFnSystem(mode7System)
+        MainScene.collSystem = this.addGlobalSystem(new DiscreteCollisionSystem(collisions));
 
         this.addEntity(new Truck());
+        this.addEntity(new GameDirector());
 
-        MainScene.collSystem = this.addGlobalSystem(new DiscreteCollisionSystem(collisions));
+
+        // @ts-ignore
+        this.addFixedFnSystem(newSystem(types(Component), (delta, entity, _) => {
+            if (entity.transform.y > LD58.GAME_HEIGHT + 100)
+            {
+                entity.destroy();
+            }
+        }))
+
+
+        const road = this.addEntity(new Entity("road", 0, 0, Layers.ROAD_LINE));
+        road.addComponent(new Timer(500, null, true)).onTrigger.register((caller, data) => {
+            const roadLine = caller.parent.scene.addEntity(new Entity("roadline", LD58.GAME_WIDTH / 2, 32, Layers.ROAD_LINE));
+            roadLine.addComponent(new Sprite(caller.parent.scene.game.getResource("road_line").textureFromIndex(0),
+                {xAnchor: 0.5}));
+            roadLine.addComponent(new Mode7Me(0));
+        })
 
         // this.addGUIEntity(new Entity("main scene")).addComponent(new TextDisp(100, 10, "MAIN SCENE", {
         //     fontFamily: "pixeloid",
@@ -115,6 +141,7 @@ export class LD58 extends Game
         this.addResource("truck", new SpriteSheet(truckSpr, 44, 51))
         this.addResource("background", new SpriteSheet(background, 160, 100));
         this.addResource("flipper", new SpriteSheet(flipper, 30, 7));
+        this.addResource("road_line", new SpriteSheet(roadLineSpr, 2, 8));
 
         // Load an empty scene while we async load the resources for the main one
         this.setScene(new Scene(this));
