@@ -14,6 +14,7 @@ import {
 import {Bin} from "./Bin.ts";
 import {Flipper} from "./Flipper.ts";
 import {Layers, LD58, MainScene} from "./LD58.ts";
+import {ScoreComponent} from "./Score.ts";
 
 export class LeftFlipper extends Entity {
 
@@ -70,18 +71,19 @@ export class Truck extends Entity
         this.addChild(new RightFlipper());
         // this.addComponent(new RenderCircle(0, 0, 11));
 
-        this.addComponent(new RenderRect(-18, -10, 36, 5, 0xff0000));
+        // this.addComponent(new RenderRect(-18, -10, 36, 2, 0xff0000));
         this.addComponent(new RectCollider(MainScene.collSystem, {
             xOff: -18,
             yOff: -10,
             width: 36,
-            height: 5,
+            height: 2,
             layer: Layers.TRASH
         })).onTriggerEnter.register((caller, data) => {
             // console.log(data.result)
             if (data.other.layer === Layers.BIN)
             {
                 // console.log("destroyed")
+                this.scene.getEntityWithName("Scoreboard")?.getComponent<ScoreComponent>(ScoreComponent)?.addScore(50);
                 data.other.parent.destroy();
             }
         });

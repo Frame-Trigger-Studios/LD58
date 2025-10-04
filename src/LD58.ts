@@ -23,9 +23,11 @@ import background from "./art/background.png";
 import truckSpr from "./art/truck.png";
 import roadLineSpr from "./art/road-line.png";
 import flipper from "./art/flipper.png";
+import treeSpr from "./art/tree.png";
 import {SoundManager} from "./util/SoundManager";
 import {Truck} from "./Truck.ts";
 import {gravSystem, rotSystem} from "./Physics.ts";
+import {Score} from "./Score.ts";
 import {Mode7Me, mode7System} from "./Scroller.ts";
 import {GameDirector} from "./GameDirector.ts";
 
@@ -76,6 +78,7 @@ export class MainScene extends Scene
         super.onAdded();
 
         this.addGUIEntity(new SoundManager());
+        this.addGUIEntity(new Score(2, 2, 0));
         this.addGlobalSystem(new TimerSystem());
         this.addGlobalSystem(new FrameTriggerSystem());
 
@@ -140,6 +143,7 @@ export class LD58 extends Game
         this.addResource("bin", new SpriteSheet(binSpr, 13, 17));
         this.addResource("truck", new SpriteSheet(truckSpr, 44, 51))
         this.addResource("background", new SpriteSheet(background, 160, 100));
+        this.addResource("trees", new SpriteSheet(treeSpr, 50, 44));
         this.addResource("flipper", new SpriteSheet(flipper, 30, 7));
         this.addResource("road_line", new SpriteSheet(roadLineSpr, 2, 8));
 
