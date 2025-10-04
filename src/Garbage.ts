@@ -4,7 +4,7 @@ import {
     Key,
     MathUtil,
     newSystem,
-    RectSatCollider,
+    RectCollider,
     RenderCircle,
     RenderRect,
     Sprite,
@@ -12,7 +12,7 @@ import {
     Timer,
     types
 } from "lagom-engine";
-import {Layers} from "./LD58.ts";
+import {Layers, MainScene} from "./LD58.ts";
 
 export class Truck extends Entity
 {
@@ -37,7 +37,7 @@ export class Truck extends Entity
         this.addComponent(new RenderCircle(0, 0, 11));
 
         this.addComponent(new Timer(1000, null, true)).onTrigger.register((caller, data) => {
-            this.scene.addEntity(new Bin(60, 10));
+            this.scene.addEntity(new Bin(60, 80));
         })
     }
 }
@@ -53,7 +53,7 @@ class Bin extends Entity
     {
         super.onAdded();
 
-        this.addComponent(new Gravity());
+        // this.addComponent(new Gravity());
 
         this.addComponent(new RenderRect(-5, -5, 10, 10, null, 0xffffff));
         this.addComponent(new Sprite(this.scene.game.getResource("bin").textureFromIndex(0), {
@@ -61,7 +61,7 @@ class Bin extends Entity
             yAnchor: 0.5
         }))
         const phys = this.addComponent(new Phys());
-        this.addComponent(new RectSatCollider({
+        this.addComponent(new RectCollider(MainScene.collSystem, {
             width: 10,
             height: 10,
             xOff: -5,
@@ -72,7 +72,10 @@ class Bin extends Entity
             if (data.other.layer === Layers.FLIPPER)
             {
                 // Based on the relative position to the centre of the flipper, we want to adjust the launch angle
-                phys.yVel = -200;
+                const power = data.other.parent.getComponent<Power>(Power);
+                if (power == null) return;
+
+                phys.yVel = -power.value * 2;
                 phys.xVel = MathUtil.randomRange(-50, 50);
                 phys.rot = MathUtil.randomRange(-10, 10);
 
@@ -106,10 +109,16 @@ class Flipper extends Entity
 
         this.addComponent(new RenderRect(-10, 0, 20, 2));
         this.addComponent(new Power(this.power));
-        this.addComponent(new RectSatCollider({xOff: -10, yOff: 0, width: 20, height: 2, layer: Layers.FLIPPER}))
-        // this.addComponent(new Timer(200, null)).onTrigger.register((caller, data) => {
-        //     caller.parent.destroy()
-        // });
+        this.addComponent(new RectCollider(MainScene.collSystem, {
+            xOff: -10,
+            yOff: 0,
+            width: 20,
+            height: 2,
+            layer: Layers.FLIPPER
+        }))
+        this.addComponent(new Timer(100, null)).onTrigger.register((caller, data) => {
+            caller.parent.destroy()
+        });
     }
 }
 

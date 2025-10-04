@@ -1,7 +1,7 @@
 import {
     ActionOnPress,
     AudioAtlas,
-    CollisionMatrix,
+    CollisionMatrix, DiscreteCollisionSystem,
     Entity,
     FrameTriggerSystem,
     Game,
@@ -55,8 +55,10 @@ class TitleScene extends Scene
 
 
 
-class MainScene extends Scene
+export class MainScene extends Scene
 {
+    static collSystem: DiscreteCollisionSystem;
+
     onAdded()
     {
         super.onAdded();
@@ -66,7 +68,7 @@ class MainScene extends Scene
         this.addGlobalSystem(new FrameTriggerSystem());
         this.addEntity(new Truck());
 
-        this.addGlobalSystem(new SatCollisionSystem(collisions));
+        MainScene.collSystem = this.addGlobalSystem(new DiscreteCollisionSystem(collisions));
 
         this.addGUIEntity(new Entity("main scene")).addComponent(new TextDisp(100, 10, "MAIN SCENE", {
             fontFamily: "pixeloid",
