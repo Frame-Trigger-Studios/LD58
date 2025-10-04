@@ -1,10 +1,11 @@
 import {
-    AnimatedSprite,
-    AnimationEnd,
     Component,
     Entity,
-    Key, MathUtil,
-    newSystem, RectCollider, RenderRect,
+    Key,
+    MathUtil,
+    newSystem,
+    RectCollider,
+    RenderRect,
     Sprite,
     TextDisp,
     Timer,
@@ -12,7 +13,7 @@ import {
 } from "lagom-engine";
 import {Bin} from "./Bin.ts";
 import {Flipper} from "./Flipper.ts";
-import {Layers, MainScene} from "./LD58.ts";
+import {Layers, LD58, MainScene} from "./LD58.ts";
 import {ScoreComponent} from "./Score.ts";
 
 export class LeftFlipper extends Entity {
@@ -70,10 +71,6 @@ export class Truck extends Entity
         this.addChild(new RightFlipper());
         // this.addComponent(new RenderCircle(0, 0, 11));
 
-        this.addComponent(new Timer(1000, null, true)).onTrigger.register((caller, data) => {
-            this.scene.addEntity(new Bin(60, 65));
-        })
-
         // this.addComponent(new RenderRect(-18, -10, 36, 2, 0xff0000));
         this.addComponent(new RectCollider(MainScene.collSystem, {
             xOff: -18,
@@ -113,6 +110,8 @@ const driveSystem = newSystem(types(Drive), (delta, entity, _) => {
     {
         entity.transform.position.x += delta * .10;
     }
+
+    entity.transform.position.x = MathUtil.clamp(entity.transform.position.x, LD58.GAME_WIDTH / 2 - 25, LD58.GAME_WIDTH / 2 + 25);
 });
 
 
@@ -123,8 +122,8 @@ const powerSystem = newSystem(types(Charger, TextDisp), (delta, entity, power, t
     }
     if (entity.scene.game.keyboard.isKeyReleased(Key.Space))
     {
-        entity.addChild(new Flipper(-50, 10, power.level, true))
-        entity.addChild(new Flipper(50, 10, power.level, false))
+        entity.addChild(new Flipper(-50, 10, power.level, -1))
+        entity.addChild(new Flipper(50, 10, power.level, 1))
         entity.scene.getEntityWithName("LeftFlipper")?.getComponent<Sprite>(Sprite)?.applyConfig({
             rotation: MathUtil.degToRad(30),
         });
