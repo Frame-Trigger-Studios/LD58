@@ -22,6 +22,7 @@ import flipper from "./art/flipper.png";
 import {SoundManager} from "./util/SoundManager";
 import {Truck} from "./Truck.ts";
 import {gravSystem, rotSystem} from "./Physics.ts";
+import {Score} from "./Score.ts";
 
 
 export enum Layers
@@ -70,6 +71,7 @@ export class MainScene extends Scene
         super.onAdded();
 
         this.addGUIEntity(new SoundManager());
+        this.addGUIEntity(new Score(2, 2, 0));
         this.addGlobalSystem(new TimerSystem());
         this.addGlobalSystem(new FrameTriggerSystem());
 
