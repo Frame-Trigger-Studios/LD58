@@ -1,5 +1,3 @@
-import {Component, Entity, RectCollider, RenderCircle, RenderRect, Timer} from "lagom-engine";
-import {Layers, MainScene} from "./LD58.ts";
 import {Component, Entity, RectCollider, RenderRect, Sprite, Timer} from "lagom-engine";
 import {Layers, LD58, MainScene} from "./LD58.ts";
 
@@ -16,16 +14,7 @@ export class Flipper extends Entity
         let xscale = 1;
         let xoff = 0;
 
-        if (this.side) {
-            xscale = -1;
-            xoff = -10;
-        }
-
-
-        let xscale = 1;
-        let xoff = 0;
-
-        if (!this.right) {
+        if (this.side == -1) {
             xscale = -1;
             xoff = -10;
         }
