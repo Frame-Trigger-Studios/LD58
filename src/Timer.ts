@@ -36,7 +36,7 @@ export class TimerDisplay extends Entity {
         this.addComponent(new TextDisp(0, 0, "Time: ", {
             fontFamily: "retro",
             fill: 0xffffff,
-            fontSize: 8
+            fontSize: 8,
         }));
         const time = this.addComponent(new TimerComponent(35, 0, 99));
         this.addComponent(new Timer(1000, time, true)).onTrigger.register((caller, data) => {
@@ -47,17 +47,15 @@ export class TimerDisplay extends Entity {
                 MainScene.gameOver = true;
 
                 const score = this.scene.getEntityWithName<Score>("Scoreboard")?.getComponent<ScoreComponent>(ScoreComponent)?.score;
-                console.log(score);
+                if (score <= 0) {
+                    return;
+                }
                 submitScore("test", score).then(value => {
-                        console.log("success");
-                        console.log(value);
+                        // show highscores
                         this.scene.addGUIEntity(new HighScores(20, 10, 1))
                     },
-                    value => {
-                        console.log(value)
-                    });
-
-
+                    value => {}
+                );
             }
         });
     }
