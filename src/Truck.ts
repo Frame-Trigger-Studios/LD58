@@ -1,28 +1,18 @@
-import {
-    Component,
-    Entity,
-    Key,
-    MathUtil,
-    newSystem,
-    RectCollider,
-    RenderRect,
-    Sprite,
-    TextDisp,
-    Timer,
-    types
-} from "lagom-engine";
-import {Bin} from "./Bin.ts";
+import {Component, Entity, Key, MathUtil, newSystem, RectCollider, Sprite, TextDisp, types, Util} from "lagom-engine";
 import {Flipper} from "./Flipper.ts";
 import {Layers, LD58, MainScene} from "./LD58.ts";
 import {ScoreComponent} from "./Score.ts";
 
-export class LeftFlipper extends Entity {
+export class LeftFlipper extends Entity
+{
 
-    constructor() {
+    constructor()
+    {
         super("LeftFlipper", -20, 15, Layers.TRUCK);
     }
 
-    onAdded() {
+    onAdded()
+    {
         super.onAdded();
 
         this.addComponent(new Sprite(this.scene.getGame().getResource("flipper").texture(0, 0), {
@@ -31,13 +21,16 @@ export class LeftFlipper extends Entity {
     }
 }
 
-export class RightFlipper extends Entity {
+export class RightFlipper extends Entity
+{
 
-    constructor() {
+    constructor()
+    {
         super("RightFlipper", 18, 8, Layers.TRUCK);
     }
 
-    onAdded() {
+    onAdded()
+    {
         super.onAdded();
 
         this.addComponent(new Sprite(this.scene.getGame().getResource("flipper").texture(0, 0), {
@@ -58,6 +51,7 @@ export class Truck extends Entity
         super.onAdded();
 
         this.scene.addFnSystem(driveSystem)
+        this.scene.addFixedFnSystem(jiggleSystem)
         this.scene.addFnSystem(powerSystem)
 
         this.addComponent(new Drive());
@@ -113,6 +107,22 @@ const driveSystem = newSystem(types(Drive), (delta, entity, _) => {
 
     entity.transform.position.x = MathUtil.clamp(entity.transform.position.x, LD58.GAME_WIDTH / 2 - 25, LD58.GAME_WIDTH / 2 + 25);
 });
+
+const jiggleSystem = newSystem(types(Sprite, Drive), (delta, entity, sprite, _) => {
+    if (MathUtil.randomRange(0, 100) > 90)
+    {
+        sprite.applyConfig({
+            rotation: MathUtil.degToRad(MathUtil.randomRange(-1, 1)),
+        })
+    }
+
+    if (MathUtil.randomRange(0, 100) > 40)
+    {
+        sprite.applyConfig({
+            yOffset: Util.choose(0, 0.3)
+        })
+    }
+})
 
 
 const powerSystem = newSystem(types(Charger, TextDisp), (delta, entity, power, txt) => {
