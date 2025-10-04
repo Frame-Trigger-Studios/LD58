@@ -15,8 +15,8 @@ export class GameDirector extends Entity
         super.onAdded();
 
         this.addComponent(new Timer(1000, null, true)).onTrigger.register((caller, data) => {
-            this.scene.addEntity(new Bin(-70, 32));
-            this.scene.addEntity(new Bin(70, 32));
+            this.scene.addEntity(new Bin(-30, 32));
+            this.scene.addEntity(new Bin(30, 32));
         })
 
         queueTree(this);
@@ -26,8 +26,8 @@ export class GameDirector extends Entity
 
 function queueTree(entity: Entity)
 {
-    entity.addComponent(new Timer(MathUtil.randomRange(500, 1500), null, false)).onTrigger.register((caller, data) => {
-        const x = Util.choose(MathUtil.randomRange(70, 100), MathUtil.randomRange(-70, -100));
+    entity.addComponent(new Timer(MathUtil.randomRange(50, 150), null, false)).onTrigger.register((caller, data) => {
+        const x = Util.choose(MathUtil.randomRange(35, 80), MathUtil.randomRange(-35, -80));
         const tree = entity.scene.addEntity(new Entity("tree", x, 32));
         tree.addComponent(new VariantSprite(entity.scene.game.getResource("trees").textureSliceFromSheet(), {xAnchor: 0.5, yAnchor: 1}));
         tree.addComponent(new Mode7Me(x));
@@ -37,10 +37,10 @@ function queueTree(entity: Entity)
 function queueSign(entity: Entity)
 {
     entity.addComponent(new Timer(MathUtil.randomRange(3500, 10500), null, false)).onTrigger.register((caller, data) => {
-        const x = Util.choose(58, -58);
+        const x = Util.choose(28, -28);
         const tree = entity.scene.addEntity(new Entity("tree", x, 32));
         tree.addComponent(new VariantSprite(entity.scene.game.getResource("signs").textureSliceFromSheet(), {xAnchor: 0.5, yAnchor: 1}));
-        tree.addComponent(new Mode7Me(x, 0.5));
+        tree.addComponent(new Mode7Me(x, 1));
         queueSign(entity);
     })
 }
