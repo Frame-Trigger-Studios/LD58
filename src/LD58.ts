@@ -8,7 +8,7 @@ import {
     Log,
     LogLevel,
     SatCollisionSystem,
-    Scene,
+    Scene, Sprite,
     SpriteSheet,
     TextDisp,
     TimerSystem
@@ -16,6 +16,7 @@ import {
 import WebFont from 'webfontloader';
 import muteButtonSpr from "./art/mute_button.png";
 import binSpr from "./art/bin.png";
+import background from "./art/game.png";
 import {SoundManager} from "./util/SoundManager";
 import {Truck} from "./Garbage.ts";
 
@@ -75,6 +76,9 @@ export class MainScene extends Scene
             fill: 0xffffff
         }));
 
+        const background = this.addEntity(new Entity("background", 0, 0));
+        background.addComponent(new Sprite(this.game.getResource("background").texture(0, 0)));
+
     }
 }
 
@@ -101,6 +105,7 @@ export class LD58 extends Game
 
         this.addResource("mute_button", new SpriteSheet(muteButtonSpr, 16, 16));
         this.addResource("bin", new SpriteSheet(binSpr, 10, 10));
+        this.addResource("background", new SpriteSheet(background, 160, 100))
 
         // Load an empty scene while we async load the resources for the main one
         this.setScene(new Scene(this));
