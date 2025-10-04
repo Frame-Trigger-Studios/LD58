@@ -78,10 +78,10 @@ export class MainScene extends Scene
 
         MainScene.collSystem = this.addGlobalSystem(new DiscreteCollisionSystem(collisions));
 
-        this.addGUIEntity(new Entity("main scene")).addComponent(new TextDisp(100, 10, "MAIN SCENE", {
-            fontFamily: "pixeloid",
-            fill: 0xffffff
-        }));
+        // this.addGUIEntity(new Entity("main scene")).addComponent(new TextDisp(100, 10, "MAIN SCENE", {
+        //     fontFamily: "pixeloid",
+        //     fill: 0xffffff
+        // }));
 
         const background = this.addEntity(new Entity("background", 0, 0, Layers.BACKGROUND));
         background.addComponent(new Sprite(this.game.getResource("background").texture(0, 0)));
