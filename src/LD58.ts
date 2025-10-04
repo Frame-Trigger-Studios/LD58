@@ -1,11 +1,13 @@
 import {
     ActionOnPress,
     AudioAtlas,
+    CollisionMatrix,
     Entity,
     FrameTriggerSystem,
     Game,
     Log,
     LogLevel,
+    SatCollisionSystem,
     Scene,
     SpriteSheet,
     TextDisp,
@@ -13,10 +15,27 @@ import {
 } from 'lagom-engine';
 import WebFont from 'webfontloader';
 import muteButtonSpr from "./art/mute_button.png";
+import binSpr from "./art/bin.png";
 import {SoundManager} from "./util/SoundManager";
+import {Truck} from "./Garbage.ts";
 
-class TitleScene extends Scene {
-    onAdded() {
+
+export enum Layers
+{
+    TRUCK,
+    FLIPPER,
+    BIN,
+    TRASH,
+    SOLIDS
+}
+
+const collisions = new CollisionMatrix();
+collisions.addCollision(Layers.FLIPPER, Layers.BIN);
+
+class TitleScene extends Scene
+{
+    onAdded()
+    {
         super.onAdded();
 
         this.addGUIEntity(new SoundManager());
@@ -34,13 +53,20 @@ class TitleScene extends Scene {
     }
 }
 
-class MainScene extends Scene {
-    onAdded() {
+
+
+class MainScene extends Scene
+{
+    onAdded()
+    {
         super.onAdded();
 
         this.addGUIEntity(new SoundManager());
         this.addGlobalSystem(new TimerSystem());
         this.addGlobalSystem(new FrameTriggerSystem());
+        this.addEntity(new Truck());
+
+        this.addGlobalSystem(new SatCollisionSystem(collisions));
 
         this.addGUIEntity(new Entity("main scene")).addComponent(new TextDisp(100, 10, "MAIN SCENE", {
             fontFamily: "pixeloid",
@@ -50,7 +76,8 @@ class MainScene extends Scene {
     }
 }
 
-export class LD58 extends Game {
+export class LD58 extends Game
+{
     static GAME_WIDTH = 160;
     static GAME_HEIGHT = 100;
 
@@ -58,7 +85,8 @@ export class LD58 extends Game {
     static musicPlaying = false;
     static audioAtlas: AudioAtlas = new AudioAtlas();
 
-    constructor() {
+    constructor()
+    {
         super({
             width: LD58.GAME_WIDTH,
             height: LD58.GAME_HEIGHT,
@@ -70,6 +98,7 @@ export class LD58 extends Game {
         Log.logLevel = LogLevel.WARN;
 
         this.addResource("mute_button", new SpriteSheet(muteButtonSpr, 16, 16));
+        this.addResource("bin", new SpriteSheet(binSpr, 10, 10));
 
         // Load an empty scene while we async load the resources for the main one
         this.setScene(new Scene(this));
@@ -85,7 +114,8 @@ export class LD58 extends Game {
                 custom: {
                     families: ["pixeloid", "retro"]
                 },
-                active() {
+                active()
+                {
                     resolve();
                 }
             });
@@ -94,7 +124,7 @@ export class LD58 extends Game {
         // Wait for all resources to be loaded and then start the main scene.
         Promise.all([fonts, this.resourceLoader.loadAll()]).then(
             () => {
-                this.setScene(new TitleScene(this));
+                this.setScene(new MainScene(this));
             }
         )
 
