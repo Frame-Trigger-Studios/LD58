@@ -38,7 +38,7 @@ export class TimerDisplay extends Entity {
             fill: 0xffffff,
             fontSize: 8
         }));
-        const time = this.addComponent(new TimerComponent(35, 0, 2));
+        const time = this.addComponent(new TimerComponent(35, 0, 99));
         this.addComponent(new Timer(1000, time, true)).onTrigger.register((caller, data) => {
             data.decrement();
 
