@@ -15,6 +15,7 @@ import {Bin} from "./Bin.ts";
 import {Flipper} from "./Flipper.ts";
 import {Layers, LD58, MainScene} from "./LD58.ts";
 import {ScoreComponent} from "./Score.ts";
+import {Gravity} from "./Physics.ts";
 
 export class LeftFlipper extends Entity {
 
@@ -80,7 +81,7 @@ export class Truck extends Entity
             layer: Layers.TRASH
         })).onTriggerEnter.register((caller, data) => {
             // console.log(data.result)
-            if (data.other.layer === Layers.BIN)
+            if (data.other.layer === Layers.BIN && data.other.parent.getComponent(Gravity) != null)
             {
                 // console.log("destroyed")
                 this.scene.getEntityWithName("Scoreboard")?.getComponent<ScoreComponent>(ScoreComponent)?.addScore(50);
