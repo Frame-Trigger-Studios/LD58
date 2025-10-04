@@ -110,7 +110,7 @@ export class LD58 extends Game
         Log.logLevel = LogLevel.WARN;
 
         this.addResource("mute_button", new SpriteSheet(muteButtonSpr, 16, 16));
-        this.addResource("bin", new SpriteSheet(binSpr, 10, 10));
+        this.addResource("bin", new SpriteSheet(binSpr, 13, 17));
         this.addResource("truck", new SpriteSheet(truckSpr, 160, 100))
         this.addResource("background", new SpriteSheet(background, 160, 100))
 
