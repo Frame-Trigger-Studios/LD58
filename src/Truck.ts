@@ -1,4 +1,4 @@
-import {Component, Entity, Key, newSystem, RenderCircle, Sprite, TextDisp, Timer, types} from "lagom-engine";
+import {Component, Entity, Key, newSystem, Sprite, TextDisp, Timer, types} from "lagom-engine";
 import {Bin} from "./Bin.ts";
 import {Flipper} from "./Flipper.ts";
 import {Layers} from "./LD58.ts";
@@ -54,7 +54,6 @@ const driveSystem = newSystem(types(Drive), (delta, entity, _) => {
     }
 });
 
-
 const powerSystem = newSystem(types(Charger, TextDisp), (delta, entity, power, txt) => {
     if (entity.scene.game.keyboard.isKeyDown(Key.Space))
     {
@@ -62,8 +61,8 @@ const powerSystem = newSystem(types(Charger, TextDisp), (delta, entity, power, t
     }
     if (entity.scene.game.keyboard.isKeyReleased(Key.Space))
     {
-        entity.addChild(new Flipper(-35, 20, power.level))
-        entity.addChild(new Flipper(35, 20, power.level))
+        entity.addChild(new Flipper(-35, 20, power.level, -1))
+        entity.addChild(new Flipper(35, 20, power.level, 1))
         power.level = 0;
     }
 
