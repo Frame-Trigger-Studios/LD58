@@ -23,6 +23,11 @@ export async function getScores() {
     return await fetch("https://quackqack.pythonanywhere.com/leaderboard");
 }
 
+interface Score {
+    name: string,
+    score: number
+}
+
 export class HighScores extends Entity {
 
     constructor(x: number, y: number, depth: number) {
@@ -41,23 +46,23 @@ export class HighScores extends Entity {
         }));
 
         getScores().then(value => {
-            value.json().then((v: any[]) => {
-                const scores = v.slice(0, 6);
+            value.json().then((v: Score[]) => {
+                const scores = v.slice(0, 9);
                 let yoff = 15
                 scores.forEach(score => {
-                    this.addComponent(new TextDisp(5, yoff, score["name"], {
+                    this.addComponent(new TextDisp(5, yoff, score.name, {
                         fontFamily: "retro",
                         fill: 0xffffff,
-                        fontSize: 8
+                        fontSize: 6
                     }));
 
-                    this.addComponent(new TextDisp(LD58.GAME_WIDTH/2 - 10, yoff, score["score"], {
+                    this.addComponent(new TextDisp(LD58.GAME_WIDTH/2 - 10, yoff, score.score.toString(), {
                         fontFamily: "retro",
                         fill: 0xffffff,
-                        fontSize: 8
+                        fontSize: 6
                     }));
 
-                    yoff += 10;
+                    yoff += 7;
                 })
             });
 
