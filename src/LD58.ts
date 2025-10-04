@@ -23,6 +23,7 @@ import background from "./art/background.png";
 import truckSpr from "./art/truck.png";
 import roadLineSpr from "./art/road-line.png";
 import flipper from "./art/flipper.png";
+import signSpr from "./art/sign-roo.png";
 import treeSpr from "./art/tree.png";
 import {SoundManager} from "./util/SoundManager";
 import {Truck} from "./Truck.ts";
@@ -144,6 +145,7 @@ export class LD58 extends Game
         this.addResource("truck", new SpriteSheet(truckSpr, 44, 51))
         this.addResource("background", new SpriteSheet(background, 160, 100));
         this.addResource("trees", new SpriteSheet(treeSpr, 50, 44));
+        this.addResource("signs", new SpriteSheet(signSpr, 20, 56));
         this.addResource("flipper", new SpriteSheet(flipper, 30, 7));
         this.addResource("road_line", new SpriteSheet(roadLineSpr, 2, 8));
 
