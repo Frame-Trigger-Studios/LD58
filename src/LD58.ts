@@ -1,19 +1,20 @@
 import {
     ActionOnPress,
     AudioAtlas,
-    CollisionMatrix,
+    CollisionMatrix, Component,
     DiscreteCollisionSystem,
     Entity,
     FrameTriggerSystem,
     Game,
     Log,
     LogLevel,
+    newSystem,
     Scene,
     Sprite,
     SpriteSheet,
     TextDisp,
     Timer,
-    TimerSystem
+    TimerSystem, types
 } from 'lagom-engine';
 import WebFont from 'webfontloader';
 import muteButtonSpr from "./art/mute_button.png";
@@ -81,6 +82,14 @@ export class MainScene extends Scene
         this.addFnSystem(mode7System)
 
         this.addEntity(new Truck());
+
+        // @ts-ignore
+        this.addFixedFnSystem(newSystem(types(Component), (delta, entity, _) => {
+            if (entity.transform.y > LD58.GAME_HEIGHT + 100)
+            {
+                entity.destroy();
+            }
+        }))
 
         MainScene.collSystem = this.addGlobalSystem(new DiscreteCollisionSystem(collisions));
 

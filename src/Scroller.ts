@@ -17,13 +17,11 @@ export const mode7System = newSystem(types(Mode7Me, Sprite), (delta, entity, m, 
     scale_factor = Math.pow(scale_factor, 2);
 
     const t = (LD58.GAME_HEIGHT - 32) / 100;
-    const x=   LD58.GAME_WIDTH / 2 + m.startX * (1 + (scale_factor - 1) * t);
+    const x = LD58.GAME_WIDTH / 2 + m.startX * (1 + (scale_factor - 1) * t);
 
 
     entity.transform.y += delta * 0.05 * scale_factor;
     entity.transform.x = x;
-    console.log(x);
 
     spr.applyConfig({xScale: scale_factor, yScale: scale_factor})
-
 })

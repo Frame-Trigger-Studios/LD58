@@ -1,26 +1,18 @@
-import {
-    AnimatedSprite,
-    AnimationEnd,
-    Component,
-    Entity,
-    Key, MathUtil,
-    newSystem,
-    Sprite,
-    TextDisp,
-    Timer,
-    types
-} from "lagom-engine";
+import {Component, Entity, Key, MathUtil, newSystem, Sprite, TextDisp, Timer, types} from "lagom-engine";
 import {Bin} from "./Bin.ts";
 import {Flipper} from "./Flipper.ts";
-import {Layers} from "./LD58.ts";
+import {Layers, LD58} from "./LD58.ts";
 
-export class LeftFlipper extends Entity {
+export class LeftFlipper extends Entity
+{
 
-    constructor() {
+    constructor()
+    {
         super("LeftFlipper", -20, 15, Layers.TRUCK);
     }
 
-    onAdded() {
+    onAdded()
+    {
         super.onAdded();
 
         this.addComponent(new Sprite(this.scene.getGame().getResource("flipper").texture(0, 0), {
@@ -29,13 +21,16 @@ export class LeftFlipper extends Entity {
     }
 }
 
-export class RightFlipper extends Entity {
+export class RightFlipper extends Entity
+{
 
-    constructor() {
+    constructor()
+    {
         super("RightFlipper", 18, 8, Layers.TRUCK);
     }
 
-    onAdded() {
+    onAdded()
+    {
         super.onAdded();
 
         this.addComponent(new Sprite(this.scene.getGame().getResource("flipper").texture(0, 0), {
@@ -95,6 +90,8 @@ const driveSystem = newSystem(types(Drive), (delta, entity, _) => {
     {
         entity.transform.position.x += delta * .10;
     }
+
+    entity.transform.position.x = MathUtil.clamp(entity.transform.position.x, LD58.GAME_WIDTH / 2 - 25, LD58.GAME_WIDTH / 2 + 25);
 });
 
 
@@ -105,8 +102,8 @@ const powerSystem = newSystem(types(Charger, TextDisp), (delta, entity, power, t
     }
     if (entity.scene.game.keyboard.isKeyReleased(Key.Space))
     {
-        entity.addChild(new Flipper(-50, 10, power.level, true))
-        entity.addChild(new Flipper(50, 10, power.level, false))
+        entity.addChild(new Flipper(-50, 10, power.level, -1))
+        entity.addChild(new Flipper(50, 10, power.level, 1))
         entity.scene.getEntityWithName("LeftFlipper")?.getComponent<Sprite>(Sprite)?.applyConfig({
             rotation: MathUtil.degToRad(30),
         });
