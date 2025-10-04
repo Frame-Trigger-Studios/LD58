@@ -8,7 +8,7 @@ import {
     Game,
     Log,
     LogLevel,
-    Scene,
+    Scene, Sprite,
     SpriteSheet,
     TextDisp,
     TimerSystem
@@ -16,7 +16,7 @@ import {
 import WebFont from 'webfontloader';
 import muteButtonSpr from "./art/mute_button.png";
 import binSpr from "./art/bin.png";
-import background from "./art/game.png";
+import background from "./art/background.png";
 import truckSpr from "./art/truck.png";
 import {SoundManager} from "./util/SoundManager";
 import {Truck} from "./Truck.ts";
@@ -25,6 +25,7 @@ import {gravSystem, rotSystem} from "./Physics.ts";
 
 export enum Layers
 {
+    BACKGROUND,
     TRUCK,
     FLIPPER,
     BIN,
@@ -82,8 +83,8 @@ export class MainScene extends Scene
             fill: 0xffffff
         }));
 
-        // const background = this.addEntity(new Entity("background", 0, 0));
-        // background.addComponent(new Sprite(this.game.getResource("background").texture(0, 0)));
+        const background = this.addEntity(new Entity("background", 0, 0, Layers.BACKGROUND));
+        background.addComponent(new Sprite(this.game.getResource("background").texture(0, 0)));
     }
 }
 
