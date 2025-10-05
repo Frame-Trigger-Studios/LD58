@@ -49,7 +49,7 @@ export class TimerDisplay extends Entity {
                 const score = this.scene.getEntityWithName<Score>("Scoreboard")?.getComponent<ScoreComponent>(ScoreComponent)?.score ?? 0;
 
                 getScores().then(resp => {
-                    if (resp === null || score < resp[resp.length - 1].score) {
+                    if (resp === null || (resp.length == 10 && score < resp[9].score)) {
                         this.scene.addGUIEntity(new HighScores(score, true))
                     } else {
                         // new high score
