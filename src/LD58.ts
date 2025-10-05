@@ -23,7 +23,7 @@ import background from "./art/background.png";
 import truckSpr from "./art/truck.png";
 import roadLineSpr from "./art/road-line.png";
 import flipper from "./art/flipper.png";
-import signSpr from "./art/sign-roo.png";
+import signSpr from "./art/signs.png";
 import treeSpr from "./art/tree.png";
 import trashSpr from "./art/trash.png";
 import powerSpr from "./art/power-bar.png";
