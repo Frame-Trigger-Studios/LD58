@@ -25,6 +25,7 @@ import roadLineSpr from "./art/road-line.png";
 import flipper from "./art/flipper.png";
 import signSpr from "./art/sign-roo.png";
 import treeSpr from "./art/tree.png";
+import trashSpr from "./art/trash.png";
 import {SoundManager} from "./util/SoundManager";
 import {Truck} from "./Truck.ts";
 import {gravSystem, rotSystem} from "./Physics.ts";
@@ -32,6 +33,7 @@ import {Score} from "./Score.ts";
 import {Mode7Me, mode7System} from "./Scroller.ts";
 import {GameDirector} from "./GameDirector.ts";
 import {TimerDisplay} from "./Timer";
+import {trashSpawnSystem} from "./Bin.ts";
 
 
 export enum Layers
@@ -90,6 +92,7 @@ export class MainScene extends Scene
         this.addFixedFnSystem(gravSystem)
         this.addFnSystem(rotSystem)
         this.addFnSystem(mode7System)
+        this.addFnSystem(trashSpawnSystem)
         MainScene.collSystem = this.addGlobalSystem(new DiscreteCollisionSystem(collisions));
 
         this.addEntity(new Truck());
@@ -151,6 +154,7 @@ export class LD58 extends Game
         this.addResource("trees", new SpriteSheet(treeSpr, 50, 44));
         this.addResource("signs", new SpriteSheet(signSpr, 20, 56));
         this.addResource("flipper", new SpriteSheet(flipper, 30, 7));
+        this.addResource("trash", new SpriteSheet(trashSpr, 8, 8));
         this.addResource("road_line", new SpriteSheet(roadLineSpr, 2, 8));
 
         // Load an empty scene while we async load the resources for the main one
