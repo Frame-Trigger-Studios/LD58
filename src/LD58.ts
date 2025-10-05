@@ -1,5 +1,6 @@
 import {
     ActionOnPress,
+    AnimatedSprite,
     AudioAtlas,
     CollisionMatrix, Component,
     DiscreteCollisionSystem,
@@ -17,6 +18,9 @@ import {
     TimerSystem, types
 } from 'lagom-engine';
 import WebFont from 'webfontloader';
+import startScreenSpr from "./art/start-screen.png";
+import binChickenSpr from "./art/bin-chicken.png";
+import tutorialTextSpr from "./art/tutorial.png";
 import muteButtonSpr from "./art/mute_button.png";
 import binSpr from "./art/bin.png";
 import background from "./art/background.png";
@@ -49,6 +53,8 @@ export enum Layers
 }
 
 export const TEXT_COLOUR = 0x655057;
+export const LIGHT_TEXT_COLOUR = 0xf6edcd;
+
 
 const collisions = new CollisionMatrix();
 collisions.addCollision(Layers.FLIPPER, Layers.BIN);
@@ -64,10 +70,12 @@ class TitleScene extends Scene
         this.addGlobalSystem(new TimerSystem());
         this.addGlobalSystem(new FrameTriggerSystem());
 
-        this.addGUIEntity(new Entity("title")).addComponent(new TextDisp(100, 10, "GAME NAME", {
-            fontFamily: "retro",
-            fill: 0xffffff
-        }));
+
+        this.addGUIEntity(new Entity("bg")).addComponent(new Sprite(this.game.getResource("start_screen").texture(0, 0)));
+
+        this.addGUIEntity(new Entity("chicken", 4, 61)).addComponent(new AnimatedSprite(
+                this.game.getResource("bin_chicken").textureSliceFromSheet(), {animationSpeed: 500}
+            ));
 
         this.addSystem(new ActionOnPress(() => {
             this.game.setScene(new MainScene(this.game))
@@ -127,10 +135,12 @@ export class MainScene extends Scene
             roadLine.addComponent(new Mode7Me(0));
         })
 
-        // this.addGUIEntity(new Entity("main scene")).addComponent(new TextDisp(100, 10, "MAIN SCENE", {
-        //     fontFamily: "pixeloid",
-        //     fill: 0xffffff
-        // }));
+        const tutorial = this.addGUIEntity(new Entity("Tutorial", 0, 0));
+        tutorial.addComponent(new AnimatedSprite(this.game.getResource("tutorial").textureSliceFromSheet(), 
+            {animationSpeed: 3000}));
+        tutorial.addComponent(new Timer(14999, null, true)).onTrigger.register((caller, data) => {
+            caller.parent.destroy();
+        })
 
         const background = this.addEntity(new Entity("background", 0, 0, Layers.BACKGROUND));
         background.addComponent(new Sprite(this.game.getResource("background").texture(0, 0)));
@@ -158,6 +168,9 @@ export class LD58 extends Game
         // Set the global log level
         Log.logLevel = LogLevel.WARN;
 
+        this.addResource("start_screen", new SpriteSheet(startScreenSpr, 160, 100));
+        this.addResource("bin_chicken", new SpriteSheet(binChickenSpr, 33, 32));
+        this.addResource("tutorial", new SpriteSheet(tutorialTextSpr, 160, 100));
         this.addResource("mute_button", new SpriteSheet(muteButtonSpr, 16, 16));
         this.addResource("bin", new SpriteSheet(binSpr, 13, 17));
         this.addResource("truck", new SpriteSheet(truckSpr, 44, 51))
@@ -193,7 +206,7 @@ export class LD58 extends Game
         // Wait for all resources to be loaded and then start the main scene.
         Promise.all([fonts, this.resourceLoader.loadAll()]).then(
             () => {
-                this.setScene(new MainScene(this));
+                this.setScene(new TitleScene(this));
             }
         )
 
