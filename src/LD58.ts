@@ -30,7 +30,7 @@ import powerSpr from "./art/power-bar.png";
 import {SoundManager} from "./util/SoundManager";
 import {DadTruck, Truck} from "./Truck.ts";
 import {gravSystem, rotSystem} from "./Physics.ts";
-import {Score} from "./Score.ts";
+import {Score, toastUp} from "./Score.ts";
 import {Mode7Me, mode7System} from "./Scroller.ts";
 import {GameDirector} from "./GameDirector.ts";
 import {TimerDisplay} from "./Timer";
@@ -45,6 +45,7 @@ export enum Layers
     BIN,
     TRUCK,
     AIR_ITEM,
+    TOAST
 }
 
 const collisions = new CollisionMatrix();
@@ -93,6 +94,8 @@ export class MainScene extends Scene
         this.addFnSystem(rotSystem)
         this.addFnSystem(mode7System)
         this.addFnSystem(trashSpawnSystem)
+        this.addFnSystem(toastUp)
+
         MainScene.collSystem = this.addGlobalSystem(new DiscreteCollisionSystem(collisions));
 
         this.addEntity(new DadTruck());
