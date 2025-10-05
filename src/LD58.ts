@@ -107,7 +107,7 @@ export class MainScene extends Scene
 
         const road = this.addEntity(new Entity("road", 0, 0, Layers.ROAD_LINE));
         road.addComponent(new Timer(500, null, true)).onTrigger.register((caller, data) => {
-            const roadLine = caller.parent.scene.addEntity(new Entity("roadline", LD58.GAME_WIDTH / 2, 32, Layers.ROAD_LINE));
+            const roadLine = caller.parent.scene.addEntity(new Entity("roadline", LD58.GAME_WIDTH / 2, 32 + 1, Layers.ROAD_LINE));
             roadLine.addComponent(new Sprite(caller.parent.scene.game.getResource("road_line").textureFromIndex(0),
                 {xAnchor: 0.5}));
             roadLine.addComponent(new Mode7Me(0));

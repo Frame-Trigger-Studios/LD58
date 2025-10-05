@@ -117,7 +117,6 @@ const jiggleSystem = newSystem(types(Sprite, Drive), (delta, entity, sprite, drv
         }
     }
 
-    // TODO make this slower but consistent
     if (MathUtil.randomRange(0, 100) > 90) {
         sprite.applyConfig({
             rotation: MathUtil.degToRad(Util.choose(-0.3, 0, 0.3)),
