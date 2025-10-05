@@ -40,13 +40,14 @@ function queueBin(entity: Entity) {
 
     entity.addComponent(new Timer(MathUtil.randomRange(600, 2700) * scalar, null, false)).onTrigger.register((caller, data) => {
         GameDirector.spawned += 1;
+        if (MainScene.gameOver) {
+            return;
+        }
         let side = Util.choose(-1, 1);
         let x = MathUtil.randomRange(30, 35);
         entity.scene.addEntity(new Bin(x * side, 32, Layers.BIN - 0.00001 * GameDirector.spawned));
 
-        if (MainScene.gameOver) {
-            caller.destroy();
-        }
+
         queueBin(entity);
     })
 }

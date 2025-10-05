@@ -1,7 +1,6 @@
-import {Entity, SysFn, System, TextDisp, Timer} from "lagom-engine";
-import {mode7System} from "./Scroller";
+import {Entity, TextDisp, Timer} from "lagom-engine";
 import {Score, ScoreComponent} from "./Score";
-import {HighScores, submitScore} from "./HighScores";
+import {getScores, HighScores, SubmitScore} from "./HighScores";
 import {MainScene, TEXT_COLOUR} from "./LD58";
 
 export class TimerComponent extends TextDisp {
@@ -48,15 +47,15 @@ export class TimerDisplay extends Entity {
                 MainScene.gameOver = true;
 
                 const score = this.scene.getEntityWithName<Score>("Scoreboard")?.getComponent<ScoreComponent>(ScoreComponent)?.score ?? 0;
-                if (score <= 0) {
-                    return;
-                }
-                submitScore("test", score).then(value => {
-                        // show highscores
-                        this.scene.addGUIEntity(new HighScores(20, 10, 1))
-                    },
-                    value => {}
-                );
+
+                getScores().then(resp => {
+                    if (resp === null || score < resp[resp.length - 1].score) {
+                        this.scene.addGUIEntity(new HighScores(score, true))
+                    } else {
+                        // new high score
+                        this.scene.addGUIEntity(new SubmitScore(score));
+                    }
+                })
             }
         });
     }
