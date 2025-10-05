@@ -19,11 +19,6 @@ export class Flipper extends Entity
             xoff = 10;
         }
 
-        this.addComponent(new RenderRect(xoff, 0,  10, 6));
-        // this.addComponent(new Sprite(this.scene.getGame().getResource("flipper").texture(0, 0), {
-        //     xScale: xscale
-        // }));
-
         this.addComponent(new FlipVals(this.power, this.side));
         this.addComponent(new RectCollider(MainScene.collSystem, {
             xOff: xoff,

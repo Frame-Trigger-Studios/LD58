@@ -172,6 +172,13 @@ const powerSystem = newSystem(types(Charger, PowerBarProg, BarSpr), (delta, enti
     }
     if (entity.scene.game.keyboard.isKeyDown(Key.Space)) {
         power.level += delta * 0.08;
+
+        entity.scene.getEntityWithName("LeftFlipper")?.getComponent<Sprite>(Sprite)?.applyConfig({
+            rotation: MathUtil.degToRad(-10),
+        });
+        entity.scene.getEntityWithName("RightFlipper")?.getComponent<Sprite>(Sprite)?.applyConfig({
+            rotation: MathUtil.degToRad(10)
+        });
     }
 
     power.level = MathUtil.clamp(power.level, 0, 100);
@@ -185,6 +192,7 @@ const powerSystem = newSystem(types(Charger, PowerBarProg, BarSpr), (delta, enti
         entity.scene.getEntityWithName("RightFlipper")?.getComponent<Sprite>(Sprite)?.applyConfig({
             rotation: MathUtil.degToRad(-30)
         });
+        
         power.level = 0;
     }
 
