@@ -1,7 +1,8 @@
 import {
     ActionOnPress,
     AudioAtlas,
-    CollisionMatrix, Component,
+    CollisionMatrix,
+    Component,
     DiscreteCollisionSystem,
     Entity,
     FrameTriggerSystem,
@@ -14,7 +15,8 @@ import {
     SpriteSheet,
     TextDisp,
     Timer,
-    TimerSystem, types
+    TimerSystem,
+    types
 } from 'lagom-engine';
 import WebFont from 'webfontloader';
 import muteButtonSpr from "./art/mute_button.png";
@@ -28,7 +30,7 @@ import treeSpr from "./art/tree.png";
 import trashSpr from "./art/trash.png";
 import powerSpr from "./art/power-bar.png";
 import {SoundManager} from "./util/SoundManager";
-import {DadTruck, Truck} from "./Truck.ts";
+import {DadTruck} from "./Truck.ts";
 import {gravSystem, rotSystem} from "./Physics.ts";
 import {Score, toastUp} from "./Score.ts";
 import {Mode7Me, mode7System} from "./Scroller.ts";
@@ -37,8 +39,7 @@ import {TimerDisplay} from "./Timer";
 import {trashSpawnSystem} from "./Bin.ts";
 
 
-export enum Layers
-{
+export enum Layers {
     BACKGROUND,
     ROAD_LINE,
     FLIPPER,
@@ -54,20 +55,21 @@ const collisions = new CollisionMatrix();
 collisions.addCollision(Layers.FLIPPER, Layers.BIN);
 collisions.addCollision(Layers.AIR_ITEM, Layers.TRUCK);
 
-class TitleScene extends Scene
-{
-    onAdded()
-    {
+class TitleScene extends Scene {
+    onAdded() {
         super.onAdded();
 
         this.addGUIEntity(new SoundManager());
         this.addGlobalSystem(new TimerSystem());
         this.addGlobalSystem(new FrameTriggerSystem());
 
-        this.addGUIEntity(new Entity("title")).addComponent(new TextDisp(100, 10, "GAME NAME", {
+        this.addGUIEntity(new Entity("title")).addComponent(new TextDisp(LD58.GAME_WIDTH / 2, 10, "BIN CHICKEN", {
             fontFamily: "retro",
-            fill: 0xffffff
-        }));
+            fill: 0xffffff,
+            align: "center",
+
+            fontSize: 10
+        })).pixiObj.anchor.set(0.5, 0);
 
         this.addSystem(new ActionOnPress(() => {
             this.game.setScene(new MainScene(this.game))
@@ -76,14 +78,12 @@ class TitleScene extends Scene
 }
 
 
-export class MainScene extends Scene
-{
+export class MainScene extends Scene {
     static collSystem: DiscreteCollisionSystem;
     // Bad (I cant work out how to destroy a functional system).
     static gameOver: boolean = false;
 
-    onAdded()
-    {
+    onAdded() {
         super.onAdded();
 
         this.addGUIEntity(new SoundManager());
@@ -105,8 +105,7 @@ export class MainScene extends Scene
 
         // @ts-ignore
         this.addFixedFnSystem(newSystem(types(Component), (delta, entity, _) => {
-            if (entity.transform.y > LD58.GAME_HEIGHT + 100)
-            {
+            if (entity.transform.y > LD58.GAME_HEIGHT + 100) {
                 entity.destroy();
             }
         }))
@@ -137,8 +136,7 @@ export class MainScene extends Scene
     }
 }
 
-export class LD58 extends Game
-{
+export class LD58 extends Game {
     static GAME_WIDTH = 160;
     static GAME_HEIGHT = 100;
 
@@ -146,13 +144,12 @@ export class LD58 extends Game
     static musicPlaying = false;
     static audioAtlas: AudioAtlas = new AudioAtlas();
 
-    constructor()
-    {
+    constructor() {
         super({
             width: LD58.GAME_WIDTH,
             height: LD58.GAME_HEIGHT,
             resolution: 6,
-            backgroundColor: 0x200140
+            backgroundColor: 0xa8c8a6
         });
 
         // Set the global log level
@@ -183,8 +180,7 @@ export class LD58 extends Game
                 custom: {
                     families: ["pixeloid", "retro"]
                 },
-                active()
-                {
+                active() {
                     resolve();
                 }
             });
@@ -193,7 +189,7 @@ export class LD58 extends Game
         // Wait for all resources to be loaded and then start the main scene.
         Promise.all([fonts, this.resourceLoader.loadAll()]).then(
             () => {
-                this.setScene(new MainScene(this));
+                this.setScene(new TitleScene(this));
             }
         )
 
