@@ -1,4 +1,4 @@
-import {Component, Entity, Key, MathUtil, newSystem, RectCollider, Sprite, types, Util} from "lagom-engine";
+import {Component, Entity, Key, MathUtil, newSystem, RectCollider, Sprite, Timer, types, Util} from "lagom-engine";
 import {Flipper} from "./Flipper.ts";
 import {Layers, LD58, MainScene} from "./LD58.ts";
 import {BasePoints, ScoreComponent, ScoreToast} from "./Score.ts";
@@ -38,7 +38,7 @@ export class RightFlipper extends Entity {
 
 export class DadTruck extends Entity {
     constructor() {
-        super("truck_parent", LD58.GAME_WIDTH/2, 60, Layers.TRUCK);
+        super("truck_parent", LD58.GAME_WIDTH / 2, 60, Layers.TRUCK);
     }
 
     onAdded() {
@@ -85,11 +85,22 @@ export class Truck extends Entity {
         this.addComponent(new BarSpr(barSprites[0], {yOffset: -40, xAnchor: 0.5}));
         this.addComponent(new PowerBarProg(barSprites));
 
-        const spr = this.addComponent(new Sprite(this.scene.game.getResource("truck").textureFromIndex(0), {
+        const spr = this.addComponent(new Sprite(this.scene.game.getResource("truck").texture(0, 0), {
             xAnchor: 0.5, yAnchor: 0.5
         }));
 
         this.addComponent(new Jiggle(spr));
+
+        this.addComponent(new Timer(500, spr, true)).onTrigger.register((caller, data) => {
+            const score = this.getScene().getEntityWithName("Scoreboard")?.getComponent<ScoreComponent>(ScoreComponent)?.score ?? 0;
+            if (score > 2500) {
+                data.pixiObj.texture = this.scene.game.getResource("truck").texture(3, 0)
+            } else if (score > 1600) {
+                data.pixiObj.texture = this.scene.game.getResource("truck").texture(2, 0)
+            } else if (score > 800) {
+                data.pixiObj.texture = this.scene.game.getResource("truck").texture(1, 0)
+            }
+        })
 
         // this.addComponent(new RenderRect(-12, 0, 24, 2));
         this.addComponent(new RectCollider(MainScene.collSystem, {
@@ -192,12 +203,11 @@ const powerSystem = newSystem(types(Charger, PowerBarProg, BarSpr), (delta, enti
         entity.scene.getEntityWithName("RightFlipper")?.getComponent<Sprite>(Sprite)?.applyConfig({
             rotation: MathUtil.degToRad(-30)
         });
-        
+
         power.level = 0;
     }
 
     // Set the bar sprite according to the power level
     const sprIndex = Math.round((power.level / 100) * (textures.bar.length - 1))
-    console.log(power.level, sprIndex);
     sprite.pixiObj.texture = textures.bar[sprIndex];
 })
