@@ -12,7 +12,7 @@ class MuteListener extends System<[AnimatedSpriteController, MuteComp]> {
         if (this.scene.game.mouse.isButtonPressed(Button.LEFT)) {
             const pos = e.scene.game.renderer.plugins.interaction.mouse.global;
 
-            if (pos.x >= LD58.GAME_WIDTH - 20 && pos.y >= LD58.GAME_HEIGHT - 20) {
+            if (pos.x >= LD58.GAME_WIDTH - 10 && pos.x <= LD58.GAME_WIDTH - 2 && pos.y >= LD58.GAME_HEIGHT - 10 && pos.y <= LD58.GAME_HEIGHT - 2) {
                 (e.scene.getEntityWithName("audio") as SoundManager).toggleMute();
                 spr.setAnimation(Number(LD58.muted));
             }
@@ -25,7 +25,7 @@ class MuteListener extends System<[AnimatedSpriteController, MuteComp]> {
 
 export class SoundManager extends Entity {
     constructor() {
-        super("audio", LD58.GAME_WIDTH - 16, LD58.GAME_HEIGHT - 17, 0);
+        super("audio", LD58.GAME_WIDTH - 10, LD58.GAME_HEIGHT - 10, 0);
         this.startMusic();
     }
 
@@ -36,10 +36,12 @@ export class SoundManager extends Entity {
         const spr = this.addComponent(new AnimatedSpriteController(Number(LD58.muted), [
             {
                 id: 0,
-                textures: [this.scene.game.getResource("mute_button").texture(0, 0, 16, 16)]
+                textures: [this.scene.game.getResource("mute_button").texture(0, 0, 16, 16)],
+                config: {xScale: 0.5, yScale: 0.5}
             }, {
                 id: 1,
-                textures: [this.scene.game.getResource("mute_button").texture(1, 0, 16, 16)]
+                textures: [this.scene.game.getResource("mute_button").texture(1, 0, 16, 16)],
+                config: {xScale: 0.5, yScale: 0.5}
             }]));
 
         this.addComponent(new Timer(50, spr, false)).onTrigger.register((caller, data) => {
