@@ -1,5 +1,5 @@
 import {Component, Entity, newSystem, TextDisp, Timer, types} from "lagom-engine";
-import { TEXT_COLOUR, Layers } from "./LD58";
+import {TEXT_COLOUR, Layers, LD58, LIGHT_TEXT_COLOUR} from "./LD58";
 
 export class BasePoints extends Component {
     constructor(readonly points: number) {
@@ -24,7 +24,7 @@ export class ScoreToast extends Entity {
 
         this.addComponent(new TextDisp(0, 0, `+${this.points}`, {
             fontFamily: "retro",
-            fill: 0xffffff,
+            fill: LIGHT_TEXT_COLOUR,
             fontSize: 4
         }))
         this.addComponent(new MoveUp());

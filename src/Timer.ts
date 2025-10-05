@@ -6,7 +6,7 @@ import {MainScene, TEXT_COLOUR} from "./LD58";
 
 export class TimerComponent extends TextDisp {
 
-    constructor(xOff: number, yOff: number, private time: number) {
+    constructor(xOff: number, yOff: number, public time: number) {
         super(xOff, yOff, time.toString(), {
             fontFamily: "retro",
             fill: TEXT_COLOUR,
@@ -30,6 +30,7 @@ export class TimerDisplay extends Entity {
         super("gameTime", x, y, depth);
     }
 
+    static GAME_TIME = 99;
 
     onAdded() {
         super.onAdded();
@@ -38,7 +39,7 @@ export class TimerDisplay extends Entity {
             fill: TEXT_COLOUR,
             fontSize: 8,
         }));
-        const time = this.addComponent(new TimerComponent(35, 0, 99));
+        const time = this.addComponent(new TimerComponent(35, 0, TimerDisplay.GAME_TIME));
         this.addComponent(new Timer(1000, time, true)).onTrigger.register((caller, data) => {
             data.decrement();
 
@@ -46,7 +47,7 @@ export class TimerDisplay extends Entity {
                 caller.repeat = false;
                 MainScene.gameOver = true;
 
-                const score = this.scene.getEntityWithName<Score>("Scoreboard")?.getComponent<ScoreComponent>(ScoreComponent)?.score;
+                const score = this.scene.getEntityWithName<Score>("Scoreboard")?.getComponent<ScoreComponent>(ScoreComponent)?.score ?? 0;
                 if (score <= 0) {
                     return;
                 }

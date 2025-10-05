@@ -1,19 +1,18 @@
-import {Entity, Game, MathUtil, Timer, Util, VariantSprite} from "lagom-engine";
+import {Entity, MathUtil, Timer, Util, VariantSprite} from "lagom-engine";
 import {Bin} from "./Bin.ts";
 import {Mode7Me} from "./Scroller.ts";
 import {Layers, LD58, MainScene} from "./LD58";
+import {TimerComponent, TimerDisplay} from "./Timer.ts";
 
-export class GameDirector extends Entity
-{
+export class GameDirector extends Entity {
     static spawned = 0;
-    constructor()
-    {
+
+    constructor() {
         super("director");
         GameDirector.spawned = 0;
     }
 
-    onAdded()
-    {
+    onAdded() {
         super.onAdded();
 
         // add some trees for fun
@@ -21,28 +20,38 @@ export class GameDirector extends Entity
             GameDirector.spawned += 1;
             const x = Util.choose(MathUtil.randomRange(35, 80), MathUtil.randomRange(-35, -80));
             const tree = this.scene.addEntity(new Entity("tree", x, MathUtil.randomRange(40, LD58.GAME_HEIGHT - 30), Layers.BIN - 0.00001 * GameDirector.spawned));
-            tree.addComponent(new VariantSprite(this.scene.game.getResource("trees").textureSliceFromSheet(), {xAnchor: 0.5, yAnchor: 1}));
+            tree.addComponent(new VariantSprite(this.scene.game.getResource("trees").textureSliceFromSheet(), {
+                xAnchor: 0.5,
+                yAnchor: 1
+            }));
             tree.addComponent(new Mode7Me(x));
         }
 
-        this.addComponent(new Timer(1500, null, true)).onTrigger.register((caller, data) => {
-            GameDirector.spawned += 1;
-            let side = Util.choose(-1, 1);
-            let x = MathUtil.randomRange(30, 35);
-            this.scene.addEntity(new Bin(x * side, 32, Layers.BIN - 0.00001 * GameDirector.spawned));
-
-            if (MainScene.gameOver) {
-                caller.destroy();
-            }
-        })
-
+        queueBin(this);
         queueTree(this);
         queueSign(this);
     }
 }
 
-function queueTree(entity: Entity)
-{
+function queueBin(entity: Entity) {
+    const time = entity.scene.getEntityWithName("gameTime")?.getComponent<TimerComponent>(TimerComponent)?.time ?? 0;
+
+    const scalar = 1 - (TimerDisplay.GAME_TIME - time) / TimerDisplay.GAME_TIME + 0.3;
+    console.log(scalar);
+    entity.addComponent(new Timer(MathUtil.randomRange(600, 2700) * scalar, null, false)).onTrigger.register((caller, data) => {
+        GameDirector.spawned += 1;
+        let side = Util.choose(-1, 1);
+        let x = MathUtil.randomRange(30, 35);
+        entity.scene.addEntity(new Bin(x * side, 32, Layers.BIN - 0.00001 * GameDirector.spawned));
+
+        if (MainScene.gameOver) {
+            caller.destroy();
+        }
+        queueBin(entity);
+    })
+}
+
+function queueTree(entity: Entity) {
     entity.addComponent(new Timer(MathUtil.randomRange(250, 450), null, false)).onTrigger.register((caller, data) => {
         GameDirector.spawned += 1;
         if (MainScene.gameOver) {
@@ -50,13 +59,16 @@ function queueTree(entity: Entity)
         }
         const x = Util.choose(MathUtil.randomRange(35, 80), MathUtil.randomRange(-35, -80));
         const tree = entity.scene.addEntity(new Entity("tree", x, 32, Layers.BIN - 0.00001 * GameDirector.spawned));
-        tree.addComponent(new VariantSprite(entity.scene.game.getResource("trees").textureSliceFromSheet(), {xAnchor: 0.5, yAnchor: 1}));
+        tree.addComponent(new VariantSprite(entity.scene.game.getResource("trees").textureSliceFromSheet(), {
+            xAnchor: 0.5,
+            yAnchor: 1
+        }));
         tree.addComponent(new Mode7Me(x));
         queueTree(entity);
     })
 }
-function queueSign(entity: Entity)
-{
+
+function queueSign(entity: Entity) {
     entity.addComponent(new Timer(MathUtil.randomRange(2000, 6000), null, false)).onTrigger.register((caller, data) => {
         GameDirector.spawned += 1;
         if (MainScene.gameOver) {
@@ -64,7 +76,10 @@ function queueSign(entity: Entity)
         }
         const x = Util.choose(28, -28);
         const tree = entity.scene.addEntity(new Entity("sign", x, 32, Layers.BIN - 0.00001 * GameDirector.spawned));
-        tree.addComponent(new VariantSprite(entity.scene.game.getResource("signs").textureSliceFromSheet(), {xAnchor: 0.5, yAnchor: 1}));
+        tree.addComponent(new VariantSprite(entity.scene.game.getResource("signs").textureSliceFromSheet(), {
+            xAnchor: 0.5,
+            yAnchor: 1
+        }));
         tree.addComponent(new Mode7Me(x, 0.7));
         queueSign(entity);
     })

@@ -166,7 +166,7 @@ export class LD58 extends Game
         });
 
         // Set the global log level
-        Log.logLevel = LogLevel.WARN;
+        Log.logLevel = LogLevel.NONE;
 
         this.addResource("start_screen", new SpriteSheet(startScreenSpr, 160, 100));
         this.addResource("bin_chicken", new SpriteSheet(binChickenSpr, 33, 32));

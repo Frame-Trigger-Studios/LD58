@@ -4,7 +4,7 @@ import {
     Entity,
     MathUtil,
     newSystem,
-    RectCollider,
+    RectCollider, RenderRect,
     Sprite,
     types,
     Util,
@@ -136,11 +136,12 @@ export class Bin extends Entity {
 
         const lid = this.scene.addEntity(new BinLid(this.transform.x, this.transform.y, this.inLayer + 0.00001));
 
+        // this.addComponent(new RenderRect(-2, -3, 4, 6))
         this.addComponent(new RectCollider(MainScene.collSystem, {
-            width: 9,
-            height: 16,
-            xOff: -5,
-            yOff: -8,
+            xOff: -2,
+            yOff: -3,
+            width: 4,
+            height: 6,
             layer: Layers.BIN
         })).onTriggerEnter.register((caller, data) => {
             if (data.other.layer === Layers.FLIPPER) {
