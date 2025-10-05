@@ -180,6 +180,13 @@ const powerSystem = newSystem(types(Charger, TextDisp), (delta, entity, power, t
     }
     if (entity.scene.game.keyboard.isKeyDown(Key.Space)) {
         power.level += delta * 0.08;
+
+        entity.scene.getEntityWithName("LeftFlipper")?.getComponent<Sprite>(Sprite)?.applyConfig({
+            rotation: MathUtil.degToRad(-10),
+        });
+        entity.scene.getEntityWithName("RightFlipper")?.getComponent<Sprite>(Sprite)?.applyConfig({
+            rotation: MathUtil.degToRad(10)
+        });
     }
     if (entity.scene.game.keyboard.isKeyReleased(Key.Space)) {
         entity.addChild(new Flipper(-50, 10, power.level, -1))
@@ -190,6 +197,7 @@ const powerSystem = newSystem(types(Charger, TextDisp), (delta, entity, power, t
         entity.scene.getEntityWithName("RightFlipper")?.getComponent<Sprite>(Sprite)?.applyConfig({
             rotation: MathUtil.degToRad(-30)
         });
+        
         power.level = 0;
     }
 
