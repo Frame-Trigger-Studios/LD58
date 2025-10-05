@@ -1,4 +1,16 @@
-import {AnimatedSprite, Component, Entity, Key, MathUtil, newSystem, RectCollider, Sprite, TextDisp, types, Util} from "lagom-engine";
+import {
+    AnimatedSprite,
+    Component,
+    Entity,
+    Key,
+    MathUtil,
+    newSystem,
+    RectCollider,
+    Sprite,
+    TextDisp,
+    types,
+    Util
+} from "lagom-engine";
 import {Flipper} from "./Flipper.ts";
 import {Layers, LD58, MainScene} from "./LD58.ts";
 import {ScoreComponent} from "./Score.ts";
@@ -58,16 +70,15 @@ export class Truck extends Entity {
         this.addChild(new RightFlipper());
         // this.addComponent(new RenderCircle(0, 0, 11));
 
-        // this.addComponent(new RenderRect(-18, -10, 36, 2, 0xff0000));
         this.addComponent(new RectCollider(MainScene.collSystem, {
             xOff: -18,
             yOff: -10,
             width: 36,
             height: 2,
-            layer: Layers.TRASH
+            layer: Layers.TRUCK
         })).onTriggerEnter.register((caller, data) => {
             // console.log(data.result)
-            if (data.other.layer === Layers.BIN && data.other.parent.getComponent(Gravity) != null) {
+            if (data.other.layer === Layers.AIR_ITEM && data.other.parent.getComponent(Gravity) != null) {
                 // console.log("destroyed")
                 this.scene.getEntityWithName("Scoreboard")?.getComponent<ScoreComponent>(ScoreComponent)?.addScore(50);
                 data.other.parent.destroy();
