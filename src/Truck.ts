@@ -1,17 +1,4 @@
-import {
-    AnimatedSprite,
-    Component,
-    Entity,
-    Key,
-    MathUtil,
-    newSystem,
-    RectCollider,
-    RenderRect,
-    Sprite,
-    TextDisp,
-    types,
-    Util
-} from "lagom-engine";
+import {Component, Entity, Key, MathUtil, newSystem, RectCollider, Sprite, types, Util} from "lagom-engine";
 import {Flipper} from "./Flipper.ts";
 import {Layers, LD58, MainScene} from "./LD58.ts";
 import {BasePoints, ScoreComponent, ScoreToast} from "./Score.ts";
@@ -25,10 +12,10 @@ export class LeftFlipper extends Entity {
     onAdded() {
         super.onAdded();
 
-        this.addComponent(new Sprite(this.scene.getGame().getResource("flipper").texture(0, 0), {
+        const spr = this.addComponent(new Sprite(this.scene.getGame().getResource("flipper").texture(0, 0), {
             xScale: 1, xAnchor: 1, yAnchor: 1
         }))
-        this.addComponent(new Jiggle());
+        this.addComponent(new Jiggle(spr));
     }
 }
 
@@ -41,10 +28,10 @@ export class RightFlipper extends Entity {
     onAdded() {
         super.onAdded();
 
-        this.addComponent(new Sprite(this.scene.getGame().getResource("flipper").texture(0, 0), {
+        const spr = this.addComponent(new Sprite(this.scene.getGame().getResource("flipper").texture(0, 0), {
             xScale: -1, xAnchor: 1
         }));
-        this.addComponent(new Jiggle());
+        this.addComponent(new Jiggle(spr));
 
     }
 }
@@ -68,6 +55,15 @@ export class DadTruck extends Entity {
     }
 }
 
+class PowerBarProg extends Component {
+    constructor(readonly bar: any[]) {
+        super();
+    }
+}
+
+export class BarSpr extends Sprite {
+}
+
 export class Truck extends Entity {
     constructor() {
         super("truck", 0, 0, Layers.TRUCK);
@@ -80,15 +76,21 @@ export class Truck extends Entity {
         this.scene.addFnSystem(powerSystem)
 
         this.addComponent(new Charger());
-        this.addComponent(new Jiggle());
-        this.addChild(new PowerBar());
+        this.addComponent(new Sprite(this.scene.game.getResource("powerbar").textureFromIndex(0), {
+            yOffset: -40,
+            xAnchor: 0.5
+        }));
 
-        this.addComponent(new TextDisp(0, -40, "POWER", {fontSize: 5, fill: "black"}));
-        this.addComponent(new Sprite(this.scene.game.getResource("truck").textureFromIndex(0), {
+        const barSprites = this.scene.game.getResource("powerbar").textureSliceFromRow(0, 1, 31);
+        this.addComponent(new BarSpr(barSprites[0], {yOffset: -40, xAnchor: 0.5}));
+        this.addComponent(new PowerBarProg(barSprites));
+
+        const spr = this.addComponent(new Sprite(this.scene.game.getResource("truck").textureFromIndex(0), {
             xAnchor: 0.5, yAnchor: 0.5
         }));
 
-        // this.addComponent(new RenderCircle(0, 0, 11));
+        this.addComponent(new Jiggle(spr));
+
         // this.addComponent(new RenderRect(-12, 0, 24, 2));
         this.addComponent(new RectCollider(MainScene.collSystem, {
             xOff: -12,
@@ -97,7 +99,7 @@ export class Truck extends Entity {
             height: 2,
             layer: Layers.TRUCK
         })).onTriggerEnter.register((caller, data) => {
-            // console.log(data.result)
+
             if (data.other.layer === Layers.AIR_ITEM && data.other.parent.transform.y > caller.parent.transform.y) {
                 const points = data.other.parent.getComponent<BasePoints>(BasePoints)?.points ?? 0
                 this.scene.getEntityWithName("Scoreboard")?.getComponent<ScoreComponent>(ScoreComponent)?.addScore(points);
@@ -105,18 +107,6 @@ export class Truck extends Entity {
                 data.other.parent.destroy();
             }
         });
-    }
-}
-
-class PowerBar extends Entity {
-    constructor() {
-        super("PowerBar", -16, -40, Layers.TRUCK);
-    }
-    onAdded() {
-        super.onAdded();
-
-        this.addComponent(new Sprite(this.scene.game.getResource("powerbar").textureFromIndex(0)));
-        this.addComponent(new AnimatedSprite(this.scene.game.getResource("powerbar").textureSliceFromRow(0, 1, 31)));
     }
 }
 
@@ -128,6 +118,10 @@ class Charger extends Component {
 }
 
 class Jiggle extends Component {
+    constructor(readonly spr: Sprite) {
+        super();
+    }
+
     frame = 0;
 }
 
@@ -149,32 +143,30 @@ const driveSystem = newSystem(types(Drive), (delta, entity, dr) => {
     entity.transform.position.x = MathUtil.clamp(entity.transform.position.x, LD58.GAME_WIDTH / 2 - 25, LD58.GAME_WIDTH / 2 + 25);
 });
 
-const jiggleSystem = newSystem(types(Sprite, Jiggle), (delta, entity, sprite, drv) => {
+const jiggleSystem = newSystem(types(Jiggle), (delta, entity, drv) => {
 
     drv.frame += 1;
     if (drv.frame % 5 == 0) {
         if (drv.frame % 2 == 0) {
-            sprite.applyConfig({
+            drv.spr.applyConfig({
                 yOffset: 0.3
             })
         } else {
-            sprite.applyConfig({
+            drv.spr.applyConfig({
                 yOffset: 0
             })
         }
     }
 
     if (MathUtil.randomRange(0, 100) > 90) {
-        sprite.applyConfig({
+        drv.spr.applyConfig({
             rotation: MathUtil.degToRad(Util.choose(-0.3, 0, 0.3)),
         })
     }
-
-
 })
 
 
-const powerSystem = newSystem(types(Charger, TextDisp), (delta, entity, power, txt) => {
+const powerSystem = newSystem(types(Charger, PowerBarProg, BarSpr), (delta, entity, power, textures, sprite) => {
     if (MainScene.gameOver) {
         return;
     }
@@ -188,6 +180,9 @@ const powerSystem = newSystem(types(Charger, TextDisp), (delta, entity, power, t
             rotation: MathUtil.degToRad(10)
         });
     }
+
+    power.level = MathUtil.clamp(power.level, 0, 100);
+
     if (entity.scene.game.keyboard.isKeyReleased(Key.Space)) {
         entity.addChild(new Flipper(-50, 10, power.level, -1))
         entity.addChild(new Flipper(50, 10, power.level, 1))
@@ -201,5 +196,8 @@ const powerSystem = newSystem(types(Charger, TextDisp), (delta, entity, power, t
         power.level = 0;
     }
 
-    txt.pixiObj.text = `POWER ${power.level.toFixed(0)}`;
+    // Set the bar sprite according to the power level
+    const sprIndex = Math.round((power.level / 100) * (textures.bar.length - 1))
+    console.log(power.level, sprIndex);
+    sprite.pixiObj.texture = textures.bar[sprIndex];
 })
