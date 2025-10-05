@@ -42,15 +42,14 @@ export enum Layers
     BACKGROUND,
     ROAD_LINE,
     FLIPPER,
-    TRUCK,
     BIN,
-    TRASH,
-    SOLIDS
+    TRUCK,
+    AIR_ITEM,
 }
 
 const collisions = new CollisionMatrix();
 collisions.addCollision(Layers.FLIPPER, Layers.BIN);
-collisions.addCollision(Layers.TRASH, Layers.BIN);
+collisions.addCollision(Layers.AIR_ITEM, Layers.TRUCK);
 
 class TitleScene extends Scene
 {

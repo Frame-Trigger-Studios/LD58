@@ -1,4 +1,10 @@
-import {Entity, TextDisp} from "lagom-engine";
+import {Component, Entity, TextDisp} from "lagom-engine";
+
+export class BasePoints extends Component {
+    constructor(readonly points: number) {
+        super();
+    }
+}
 
 export class ScoreComponent extends TextDisp {
 
