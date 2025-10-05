@@ -4,16 +4,13 @@ import {Layers, LD58, MainScene} from "./LD58.ts";
 import {ScoreComponent} from "./Score.ts";
 import {Gravity} from "./Physics.ts";
 
-export class LeftFlipper extends Entity
-{
+export class LeftFlipper extends Entity {
 
-    constructor()
-    {
+    constructor() {
         super("LeftFlipper", -10, 15, Layers.FLIPPER);
     }
 
-    onAdded()
-    {
+    onAdded() {
         super.onAdded();
 
         this.addComponent(new Sprite(this.scene.getGame().getResource("flipper").texture(0, 0), {
@@ -22,16 +19,13 @@ export class LeftFlipper extends Entity
     }
 }
 
-export class RightFlipper extends Entity
-{
+export class RightFlipper extends Entity {
 
-    constructor()
-    {
+    constructor() {
         super("RightFlipper", 10, 8, Layers.FLIPPER);
     }
 
-    onAdded()
-    {
+    onAdded() {
         super.onAdded();
 
         this.addComponent(new Sprite(this.scene.getGame().getResource("flipper").texture(0, 0), {
@@ -40,15 +34,12 @@ export class RightFlipper extends Entity
     }
 }
 
-export class Truck extends Entity
-{
-    constructor()
-    {
+export class Truck extends Entity {
+    constructor() {
         super("truck", 50, 60, Layers.TRUCK);
     }
 
-    onAdded()
-    {
+    onAdded() {
         super.onAdded();
 
         this.scene.addFnSystem(driveSystem)
@@ -75,8 +66,7 @@ export class Truck extends Entity
             layer: Layers.TRASH
         })).onTriggerEnter.register((caller, data) => {
             // console.log(data.result)
-            if (data.other.layer === Layers.BIN && data.other.parent.getComponent(Gravity) != null)
-            {
+            if (data.other.layer === Layers.BIN && data.other.parent.getComponent(Gravity) != null) {
                 // console.log("destroyed")
                 this.scene.getEntityWithName("Scoreboard")?.getComponent<ScoreComponent>(ScoreComponent)?.addScore(50);
                 data.other.parent.destroy();
@@ -86,49 +76,55 @@ export class Truck extends Entity
 }
 
 
-class Drive extends Component
-{
+class Drive extends Component {
+    frame = 0;
 }
 
-class Charger extends Component
-{
+class Charger extends Component {
     level: number = 0;
 }
 
-const driveSystem = newSystem(types(Drive), (delta, entity, _) => {
+const driveSystem = newSystem(types(Drive, Sprite), (delta, entity, dr, spr) => {
     if (MainScene.gameOver) {
         return;
     }
+    entity.transform.angle = 0;
     const kb = entity.scene.game.keyboard;
-    if (kb.isKeyDown(Key.KeyA))
-    {
+    if (kb.isKeyDown(Key.KeyA)) {
         entity.transform.position.x -= delta * .10;
+        entity.transform.angle = -2;
     }
-    if (kb.isKeyDown(Key.KeyD))
-    {
+    if (kb.isKeyDown(Key.KeyD)) {
         entity.transform.position.x += delta * .10;
+        entity.transform.angle = 2;
     }
 
     entity.transform.position.x = MathUtil.clamp(entity.transform.position.x, LD58.GAME_WIDTH / 2 - 25, LD58.GAME_WIDTH / 2 + 25);
 });
 
-const jiggleSystem = newSystem(types(Sprite, Drive), (delta, entity, sprite, _) => {
+const jiggleSystem = newSystem(types(Sprite, Drive), (delta, entity, sprite, drv) => {
 
+    drv.frame += 1;
+    if (drv.frame % 5 == 0) {
+        if (drv.frame % 2 == 0) {
+            sprite.applyConfig({
+                yOffset: 0.3
+            })
+        } else {
+            sprite.applyConfig({
+                yOffset: 0
+            })
+        }
+    }
 
     // TODO make this slower but consistent
-    if (MathUtil.randomRange(0, 100) > 90 )
-    {
+    if (MathUtil.randomRange(0, 100) > 90) {
         sprite.applyConfig({
-            rotation: MathUtil.degToRad(Util.choose(-0.5, 0, 0.5)),
+            rotation: MathUtil.degToRad(Util.choose(-0.3, 0, 0.3)),
         })
     }
 
-    if (MathUtil.randomRange(0, 100) > 40)
-    {
-        sprite.applyConfig({
-            yOffset: Util.choose(0, 0.3)
-        })
-    }
+
 })
 
 
@@ -136,12 +132,10 @@ const powerSystem = newSystem(types(Charger, TextDisp), (delta, entity, power, t
     if (MainScene.gameOver) {
         return;
     }
-    if (entity.scene.game.keyboard.isKeyDown(Key.Space))
-    {
+    if (entity.scene.game.keyboard.isKeyDown(Key.Space)) {
         power.level += delta * 0.08;
     }
-    if (entity.scene.game.keyboard.isKeyReleased(Key.Space))
-    {
+    if (entity.scene.game.keyboard.isKeyReleased(Key.Space)) {
         entity.addChild(new Flipper(-50, 10, power.level, -1))
         entity.addChild(new Flipper(50, 10, power.level, 1))
         entity.scene.getEntityWithName("LeftFlipper")?.getComponent<Sprite>(Sprite)?.applyConfig({
