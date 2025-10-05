@@ -2,14 +2,14 @@ import {Entity, SysFn, System, TextDisp, Timer} from "lagom-engine";
 import {mode7System} from "./Scroller";
 import {Score, ScoreComponent} from "./Score";
 import {HighScores, submitScore} from "./HighScores";
-import {MainScene} from "./LD58";
+import {MainScene, TEXT_COLOUR} from "./LD58";
 
 export class TimerComponent extends TextDisp {
 
     constructor(xOff: number, yOff: number, private time: number) {
         super(xOff, yOff, time.toString(), {
             fontFamily: "retro",
-            fill: 0xffffff,
+            fill: TEXT_COLOUR,
             fontSize: 8
         });
     }
@@ -35,7 +35,7 @@ export class TimerDisplay extends Entity {
         super.onAdded();
         this.addComponent(new TextDisp(0, 0, "Time: ", {
             fontFamily: "retro",
-            fill: 0xffffff,
+            fill: TEXT_COLOUR,
             fontSize: 8,
         }));
         const time = this.addComponent(new TimerComponent(35, 0, 99));
