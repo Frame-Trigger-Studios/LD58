@@ -2,7 +2,8 @@ import {
     ActionOnPress,
     AnimatedSprite,
     AudioAtlas,
-    CollisionMatrix, Component,
+    CollisionMatrix,
+    Component,
     DiscreteCollisionSystem,
     Entity,
     FrameTriggerSystem,
@@ -11,11 +12,12 @@ import {
     LogLevel,
     newSystem,
     Scene,
+    ScreenShaker,
     Sprite,
     SpriteSheet,
-    TextDisp,
     Timer,
-    TimerSystem, types
+    TimerSystem,
+    types
 } from 'lagom-engine';
 import WebFont from 'webfontloader';
 import startScreenSpr from "./art/start-screen.png";
@@ -32,7 +34,7 @@ import treeSpr from "./art/tree.png";
 import trashSpr from "./art/trash.png";
 import powerSpr from "./art/power-bar.png";
 import {SoundManager} from "./util/SoundManager";
-import {DadTruck, Truck} from "./Truck.ts";
+import {DadTruck} from "./Truck.ts";
 import {gravSystem, rotSystem} from "./Physics.ts";
 import {Score, toastUp} from "./Score.ts";
 import {Mode7Me, mode7System} from "./Scroller.ts";
@@ -41,8 +43,7 @@ import {TimerDisplay} from "./Timer";
 import {trashSpawnSystem} from "./Bin.ts";
 
 
-export enum Layers
-{
+export enum Layers {
     BACKGROUND,
     ROAD_LINE,
     FLIPPER,
@@ -60,22 +61,19 @@ const collisions = new CollisionMatrix();
 collisions.addCollision(Layers.FLIPPER, Layers.BIN);
 collisions.addCollision(Layers.AIR_ITEM, Layers.TRUCK);
 
-class TitleScene extends Scene
-{
-    onAdded()
-    {
+class TitleScene extends Scene {
+    onAdded() {
         super.onAdded();
 
         this.addGUIEntity(new SoundManager());
         this.addGlobalSystem(new TimerSystem());
         this.addGlobalSystem(new FrameTriggerSystem());
 
-
         this.addGUIEntity(new Entity("bg")).addComponent(new Sprite(this.game.getResource("start_screen").texture(0, 0)));
 
         this.addGUIEntity(new Entity("chicken", 4, 61)).addComponent(new AnimatedSprite(
-                this.game.getResource("bin_chicken").textureSliceFromSheet(), {animationSpeed: 500}
-            ));
+            this.game.getResource("bin_chicken").textureSliceFromSheet(), {animationSpeed: 500}
+        ));
 
         this.addSystem(new ActionOnPress(() => {
             this.game.setScene(new MainScene(this.game))
@@ -84,14 +82,12 @@ class TitleScene extends Scene
 }
 
 
-export class MainScene extends Scene
-{
+export class MainScene extends Scene {
     static collSystem: DiscreteCollisionSystem;
     // Bad (I cant work out how to destroy a functional system).
     static gameOver: boolean = false;
 
-    onAdded()
-    {
+    onAdded() {
         super.onAdded();
 
         this.addGUIEntity(new SoundManager());
@@ -99,6 +95,7 @@ export class MainScene extends Scene
         this.addGUIEntity(new TimerDisplay(LD58.GAME_WIDTH - 52.5, 2, 0))
         this.addGlobalSystem(new TimerSystem());
         this.addGlobalSystem(new FrameTriggerSystem());
+        this.addGlobalSystem(new ScreenShaker(LD58.GAME_WIDTH / 2, LD58.GAME_HEIGHT / 2));
 
         this.addFixedFnSystem(gravSystem)
         this.addFnSystem(rotSystem)
@@ -136,7 +133,7 @@ export class MainScene extends Scene
         })
 
         const tutorial = this.addGUIEntity(new Entity("Tutorial", 0, 0));
-        tutorial.addComponent(new AnimatedSprite(this.game.getResource("tutorial").textureSliceFromSheet(), 
+        tutorial.addComponent(new AnimatedSprite(this.game.getResource("tutorial").textureSliceFromSheet(),
             {animationSpeed: 3000}));
         tutorial.addComponent(new Timer(14999, null, true)).onTrigger.register((caller, data) => {
             caller.parent.destroy();
@@ -147,8 +144,7 @@ export class MainScene extends Scene
     }
 }
 
-export class LD58 extends Game
-{
+export class LD58 extends Game {
     static GAME_WIDTH = 160;
     static GAME_HEIGHT = 100;
 
@@ -156,13 +152,12 @@ export class LD58 extends Game
     static musicPlaying = false;
     static audioAtlas: AudioAtlas = new AudioAtlas();
 
-    constructor()
-    {
+    constructor() {
         super({
             width: LD58.GAME_WIDTH,
             height: LD58.GAME_HEIGHT,
             resolution: 6,
-            backgroundColor: 0x200140
+            backgroundColor: 0xa8c8a6
         });
 
         // Set the global log level
@@ -196,8 +191,7 @@ export class LD58 extends Game
                 custom: {
                     families: ["pixeloid", "retro"]
                 },
-                active()
-                {
+                active() {
                     resolve();
                 }
             });

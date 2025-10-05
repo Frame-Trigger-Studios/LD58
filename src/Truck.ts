@@ -1,4 +1,16 @@
-import {Component, Entity, Key, MathUtil, newSystem, RectCollider, Sprite, Timer, types, Util} from "lagom-engine";
+import {
+    Component,
+    Entity,
+    Key,
+    MathUtil,
+    newSystem,
+    RectCollider,
+    ScreenShake,
+    Sprite,
+    Timer,
+    types,
+    Util
+} from "lagom-engine";
 import {Flipper} from "./Flipper.ts";
 import {Layers, LD58, MainScene} from "./LD58.ts";
 import {BasePoints, ScoreComponent, ScoreToast} from "./Score.ts";
@@ -115,6 +127,7 @@ export class Truck extends Entity {
                 const points = data.other.parent.getComponent<BasePoints>(BasePoints)?.points ?? 0
                 this.scene.getEntityWithName("Scoreboard")?.getComponent<ScoreComponent>(ScoreComponent)?.addScore(points);
                 this.scene.addEntity(new ScoreToast(data.other.parent.transform.x, data.other.parent.transform.y, points))
+                this.addComponent(new ScreenShake(points / 50, 100))
                 data.other.parent.destroy();
             }
         });

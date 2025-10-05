@@ -1,7 +1,7 @@
 import {Entity, RenderRect, TextDisp} from "lagom-engine";
 import {LD58} from "./LD58";
 
-export async function submitScore(name, score) {
+export async function submitScore(name: string, score: number) {
     const secret = "lol_this_is_very_secure_obviously";
     const hash = await sha256(score + secret);
 
@@ -12,7 +12,7 @@ export async function submitScore(name, score) {
     });
 }
 
-async function sha256(message) {
+async function sha256(message: string) {
     const msgBuffer = new TextEncoder().encode(message);
     const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
     const hashArray = Array.from(new Uint8Array(hashBuffer));

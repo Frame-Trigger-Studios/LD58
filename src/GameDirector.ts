@@ -37,7 +37,7 @@ function queueBin(entity: Entity) {
     const time = entity.scene.getEntityWithName("gameTime")?.getComponent<TimerComponent>(TimerComponent)?.time ?? 0;
 
     const scalar = 1 - (TimerDisplay.GAME_TIME - time) / TimerDisplay.GAME_TIME + 0.3;
-    console.log(scalar);
+
     entity.addComponent(new Timer(MathUtil.randomRange(600, 2700) * scalar, null, false)).onTrigger.register((caller, data) => {
         GameDirector.spawned += 1;
         let side = Util.choose(-1, 1);

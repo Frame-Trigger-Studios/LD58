@@ -4,7 +4,7 @@ import {
     Entity,
     MathUtil,
     newSystem,
-    RectCollider, RenderRect,
+    RectCollider,
     Sprite,
     types,
     Util,
