@@ -103,7 +103,6 @@ export class MainScene extends Scene
         this.addEntity(new DadTruck());
         this.addEntity(new GameDirector());
 
-
         // @ts-ignore
         this.addFixedFnSystem(newSystem(types(Component), (delta, entity, _) => {
             if (entity.transform.y > LD58.GAME_HEIGHT + 100)
@@ -112,6 +111,13 @@ export class MainScene extends Scene
             }
         }))
 
+        // Add some lines so it isn't empty to start
+        for (let i = 0; i < 30; i++) {
+            const roadLine = this.addEntity(new Entity("roadline", LD58.GAME_WIDTH / 2, 32 + 1 + i * 10 * 0.9, Layers.ROAD_LINE));
+            roadLine.addComponent(new Sprite(this.game.getResource("road_line").textureFromIndex(0),
+                {xAnchor: 0.5}));
+            roadLine.addComponent(new Mode7Me(0));
+        }
 
         const road = this.addEntity(new Entity("road", 0, 0, Layers.ROAD_LINE));
         road.addComponent(new Timer(500, null, true)).onTrigger.register((caller, data) => {

@@ -38,7 +38,7 @@ export class RightFlipper extends Entity {
 
 export class DadTruck extends Entity {
     constructor() {
-        super("truck_parent", 50, 60, Layers.TRUCK);
+        super("truck_parent", LD58.GAME_WIDTH/2, 60, Layers.TRUCK);
     }
 
     onAdded() {

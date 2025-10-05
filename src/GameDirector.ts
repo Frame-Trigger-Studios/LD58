@@ -1,7 +1,7 @@
 import {Entity, Game, MathUtil, Timer, Util, VariantSprite} from "lagom-engine";
 import {Bin} from "./Bin.ts";
 import {Mode7Me} from "./Scroller.ts";
-import {Layers, MainScene} from "./LD58";
+import {Layers, LD58, MainScene} from "./LD58";
 
 export class GameDirector extends Entity
 {
@@ -15,6 +15,15 @@ export class GameDirector extends Entity
     onAdded()
     {
         super.onAdded();
+
+        // add some trees for fun
+        for (let i = 0; i < 30; i++) {
+            GameDirector.spawned += 1;
+            const x = Util.choose(MathUtil.randomRange(35, 80), MathUtil.randomRange(-35, -80));
+            const tree = this.scene.addEntity(new Entity("tree", x, MathUtil.randomRange(40, LD58.GAME_HEIGHT - 30), Layers.BIN - 0.00001 * GameDirector.spawned));
+            tree.addComponent(new VariantSprite(this.scene.game.getResource("trees").textureSliceFromSheet(), {xAnchor: 0.5, yAnchor: 1}));
+            tree.addComponent(new Mode7Me(x));
+        }
 
         this.addComponent(new Timer(1500, null, true)).onTrigger.register((caller, data) => {
             GameDirector.spawned += 1;

@@ -80,8 +80,8 @@ export class MakeTrash extends Component {
 
 export const trashSpawnSystem = newSystem(types(Phys, MakeTrash), (delta, entity, phys, mkTrash) => {
     // randomly make trash if we are going fast enough and we trigger the random thing
-    if (phys.yVel < -150 && Math.abs(phys.rot) > 4 && MathUtil.randomRange(0, 100) > 80) {
-        for (let i = 0; i < MathUtil.randomRange(1, 4); i++) {
+    if (phys.yVel < -140 && Math.abs(phys.rot) > 4) {
+        for (let i = 0; i < MathUtil.randomRange(1, 10); i++) {
             let trash = entity.scene.addEntity(new Trash(entity.transform.x, entity.transform.y - 5));
             const trashPhys = trash.addComponent(new Phys())
             trashPhys.yVel = phys.yVel * MathUtil.randomRange(80, 130) * 0.01;
