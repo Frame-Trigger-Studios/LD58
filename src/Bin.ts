@@ -50,13 +50,15 @@ export class AirBinLid extends Entity {
 
         this.addComponent(new CircleCollider(MainScene.collSystem, {layer: Layers.AIR_ITEM, radius: 3}))
         this.addComponent(new Gravity());
+        this.addComponent(new BasePoints(20))
+
         this.addComponent(this.phys);
     }
 }
 
 class Trash extends Entity {
     constructor(x: number, y: number) {
-        super("trash", x, y, Layers.BIN);
+        super("trash", x, y, Layers.AIR_ITEM);
     }
 
     onAdded() {
@@ -110,6 +112,8 @@ export class AirBin extends Entity {
         this.addComponent(this.phys);
         this.addComponent(new Gravity());
         this.addComponent(new MakeTrash());
+        this.addComponent(new BasePoints(50))
+
         this.addComponent(new CircleCollider(MainScene.collSystem, {layer: Layers.AIR_ITEM, radius: 3}))
     }
 }

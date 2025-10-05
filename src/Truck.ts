@@ -6,6 +6,7 @@ import {
     MathUtil,
     newSystem,
     RectCollider,
+    RenderRect,
     Sprite,
     TextDisp,
     types,
@@ -13,8 +14,7 @@ import {
 } from "lagom-engine";
 import {Flipper} from "./Flipper.ts";
 import {Layers, LD58, MainScene} from "./LD58.ts";
-import {ScoreComponent} from "./Score.ts";
-import {Gravity} from "./Physics.ts";
+import {BasePoints, ScoreComponent} from "./Score.ts";
 
 export class LeftFlipper extends Entity {
 
@@ -89,18 +89,18 @@ export class Truck extends Entity {
         }));
 
         // this.addComponent(new RenderCircle(0, 0, 11));
-
+        // this.addComponent(new RenderRect(-12, -6, 24, 2));
         this.addComponent(new RectCollider(MainScene.collSystem, {
-            xOff: -18,
-            yOff: -10,
-            width: 36,
+            xOff: -12,
+            yOff: -6,
+            width: 24,
             height: 2,
             layer: Layers.TRUCK
         })).onTriggerEnter.register((caller, data) => {
             // console.log(data.result)
-            if (data.other.layer === Layers.AIR_ITEM && data.other.parent.getComponent(Gravity) != null) {
-                // console.log("destroyed")
-                this.scene.getEntityWithName("Scoreboard")?.getComponent<ScoreComponent>(ScoreComponent)?.addScore(50);
+            if (data.other.layer === Layers.AIR_ITEM && data.other.parent.transform.y > caller.parent.transform.y) {
+                const points = data.other.parent.getComponent<BasePoints>(BasePoints)?.points ?? 0
+                this.scene.getEntityWithName("Scoreboard")?.getComponent<ScoreComponent>(ScoreComponent)?.addScore(points);
                 data.other.parent.destroy();
             }
         });
