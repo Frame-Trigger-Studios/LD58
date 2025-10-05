@@ -137,11 +137,11 @@ const driveSystem = newSystem(types(Drive), (delta, entity, dr) => {
     }
     entity.transform.angle = 0;
     const kb = entity.scene.game.keyboard;
-    if (kb.isKeyDown(Key.KeyA)) {
+    if (kb.isKeyDown(Key.KeyA) || kb.isKeyDown(Key.ArrowLeft)) {
         entity.transform.position.x -= delta * .10;
         entity.transform.angle = -2;
     }
-    if (kb.isKeyDown(Key.KeyD)) {
+    if (kb.isKeyDown(Key.KeyD) || kb.isKeyDown(Key.ArrowRight)) {
         entity.transform.position.x += delta * .10;
         entity.transform.angle = 2;
     }
