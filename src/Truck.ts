@@ -1,4 +1,4 @@
-import {Component, Entity, Key, MathUtil, newSystem, RectCollider, Sprite, TextDisp, types, Util} from "lagom-engine";
+import {AnimatedSprite, Component, Entity, Key, MathUtil, newSystem, RectCollider, Sprite, TextDisp, types, Util} from "lagom-engine";
 import {Flipper} from "./Flipper.ts";
 import {Layers, LD58, MainScene} from "./LD58.ts";
 import {ScoreComponent} from "./Score.ts";
@@ -48,6 +48,7 @@ export class Truck extends Entity {
 
         this.addComponent(new Drive());
         this.addComponent(new Charger());
+        this.addChild(new PowerBar());
 
         this.addComponent(new TextDisp(0, -40, "POWER", {fontSize: 5, fill: "black"}));
         this.addComponent(new Sprite(this.scene.game.getResource("truck").textureFromIndex(0), {
@@ -75,6 +76,17 @@ export class Truck extends Entity {
     }
 }
 
+class PowerBar extends Entity {
+    constructor() {
+        super("PowerBar", -16, -40, Layers.TRUCK);
+    }
+    onAdded() {
+        super.onAdded();
+
+        this.addComponent(new Sprite(this.scene.game.getResource("powerbar").textureFromIndex(0)));
+        this.addComponent(new AnimatedSprite(this.scene.game.getResource("powerbar").textureSliceFromRow(0, 1, 31)));
+    }
+}
 
 class Drive extends Component {
     frame = 0;

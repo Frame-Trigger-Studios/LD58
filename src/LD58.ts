@@ -26,6 +26,7 @@ import flipper from "./art/flipper.png";
 import signSpr from "./art/sign-roo.png";
 import treeSpr from "./art/tree.png";
 import trashSpr from "./art/trash.png";
+import powerSpr from "./art/power-bar.png";
 import {SoundManager} from "./util/SoundManager";
 import {Truck} from "./Truck.ts";
 import {gravSystem, rotSystem} from "./Physics.ts";
@@ -150,6 +151,7 @@ export class LD58 extends Game
         this.addResource("mute_button", new SpriteSheet(muteButtonSpr, 16, 16));
         this.addResource("bin", new SpriteSheet(binSpr, 13, 17));
         this.addResource("truck", new SpriteSheet(truckSpr, 44, 51))
+        this.addResource("powerbar", new SpriteSheet(powerSpr, 32, 7))
         this.addResource("background", new SpriteSheet(background, 160, 100));
         this.addResource("trees", new SpriteSheet(treeSpr, 50, 44));
         this.addResource("signs", new SpriteSheet(signSpr, 20, 56));
