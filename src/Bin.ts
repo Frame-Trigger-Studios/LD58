@@ -20,8 +20,8 @@ export class BinLid extends Entity {
 
     variant = Util.choose(0, 1, 2)
 
-    constructor(x: number, y: number) {
-        super("binlid", x, y, Layers.BIN);
+    constructor(x: number, y: number, layer: number) {
+        super("binlid", x, y, layer);
     }
 
     onAdded() {
@@ -29,7 +29,7 @@ export class BinLid extends Entity {
         this.addComponent(new Mode7Me(this.transform.x));
         this.addComponent(new Sprite(this.scene.game.getResource("bin").textureSliceFromRow(1, 0, 2)[this.variant], {
             xAnchor: 0.5,
-            yAnchor: 0.5
+            yAnchor: 0.5,
         }))
     }
 }
@@ -115,8 +115,8 @@ export class AirBin extends Entity {
 }
 
 export class Bin extends Entity {
-    constructor(x: number, y: number) {
-        super("bin", x, y, Layers.BIN);
+    constructor(x: number, y: number, readonly inLayer: number) {
+        super("bin", x, y, inLayer);
     }
 
     onAdded() {
@@ -130,7 +130,7 @@ export class Bin extends Entity {
             yAnchor: 0.5
         }))
 
-        const lid = this.scene.addEntity(new BinLid(this.transform.x, this.transform.y));
+        const lid = this.scene.addEntity(new BinLid(this.transform.x, this.transform.y, this.inLayer + 0.00001));
 
         this.addComponent(new RectCollider(MainScene.collSystem, {
             width: 9,

@@ -28,6 +28,7 @@ export class LeftFlipper extends Entity {
         this.addComponent(new Sprite(this.scene.getGame().getResource("flipper").texture(0, 0), {
             xScale: 1, xAnchor: 1, yAnchor: 1
         }))
+        this.addComponent(new Jiggle());
     }
 }
 
@@ -43,31 +44,50 @@ export class RightFlipper extends Entity {
         this.addComponent(new Sprite(this.scene.getGame().getResource("flipper").texture(0, 0), {
             xScale: -1, xAnchor: 1
         }));
+        this.addComponent(new Jiggle());
+
     }
 }
 
-export class Truck extends Entity {
+export class DadTruck extends Entity {
     constructor() {
-        super("truck", 50, 60, Layers.TRUCK);
+        super("truck_parent", 50, 60, Layers.TRUCK);
     }
 
     onAdded() {
         super.onAdded();
 
+        this.addChild(new Truck());
+        this.addChild(new LeftFlipper());
+        this.addChild(new RightFlipper());
+
         this.scene.addFnSystem(driveSystem)
+
+        this.addComponent(new Drive());
+
+    }
+}
+
+export class Truck extends Entity {
+    constructor() {
+        super("truck", 0, 0, Layers.TRUCK);
+    }
+
+    onAdded() {
+        super.onAdded();
+
         this.scene.addFixedFnSystem(jiggleSystem)
         this.scene.addFnSystem(powerSystem)
 
-        this.addComponent(new Drive());
         this.addComponent(new Charger());
+        this.addComponent(new Jiggle());
         this.addChild(new PowerBar());
 
         this.addComponent(new TextDisp(0, -40, "POWER", {fontSize: 5, fill: "black"}));
         this.addComponent(new Sprite(this.scene.game.getResource("truck").textureFromIndex(0), {
             xAnchor: 0.5, yAnchor: 0.5
         }));
-        this.addChild(new LeftFlipper());
-        this.addChild(new RightFlipper());
+
         // this.addComponent(new RenderCircle(0, 0, 11));
 
         this.addComponent(new RectCollider(MainScene.collSystem, {
@@ -100,14 +120,17 @@ class PowerBar extends Entity {
 }
 
 class Drive extends Component {
-    frame = 0;
 }
 
 class Charger extends Component {
     level: number = 0;
 }
 
-const driveSystem = newSystem(types(Drive, Sprite), (delta, entity, dr, spr) => {
+class Jiggle extends Component {
+    frame = 0;
+}
+
+const driveSystem = newSystem(types(Drive), (delta, entity, dr) => {
     if (MainScene.gameOver) {
         return;
     }
@@ -125,7 +148,7 @@ const driveSystem = newSystem(types(Drive, Sprite), (delta, entity, dr, spr) => 
     entity.transform.position.x = MathUtil.clamp(entity.transform.position.x, LD58.GAME_WIDTH / 2 - 25, LD58.GAME_WIDTH / 2 + 25);
 });
 
-const jiggleSystem = newSystem(types(Sprite, Drive), (delta, entity, sprite, drv) => {
+const jiggleSystem = newSystem(types(Sprite, Jiggle), (delta, entity, sprite, drv) => {
 
     drv.frame += 1;
     if (drv.frame % 5 == 0) {

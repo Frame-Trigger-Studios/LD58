@@ -28,7 +28,7 @@ import treeSpr from "./art/tree.png";
 import trashSpr from "./art/trash.png";
 import powerSpr from "./art/power-bar.png";
 import {SoundManager} from "./util/SoundManager";
-import {Truck} from "./Truck.ts";
+import {DadTruck, Truck} from "./Truck.ts";
 import {gravSystem, rotSystem} from "./Physics.ts";
 import {Score} from "./Score.ts";
 import {Mode7Me, mode7System} from "./Scroller.ts";
@@ -95,7 +95,7 @@ export class MainScene extends Scene
         this.addFnSystem(trashSpawnSystem)
         MainScene.collSystem = this.addGlobalSystem(new DiscreteCollisionSystem(collisions));
 
-        this.addEntity(new Truck());
+        this.addEntity(new DadTruck());
         this.addEntity(new GameDirector());
 
 
