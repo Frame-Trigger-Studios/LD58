@@ -48,7 +48,7 @@ function queueTree(entity: Entity)
 }
 function queueSign(entity: Entity)
 {
-    entity.addComponent(new Timer(MathUtil.randomRange(3500, 10500), null, false)).onTrigger.register((caller, data) => {
+    entity.addComponent(new Timer(MathUtil.randomRange(2000, 6000), null, false)).onTrigger.register((caller, data) => {
         GameDirector.spawned += 1;
         if (MainScene.gameOver) {
             return;

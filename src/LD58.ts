@@ -47,6 +47,8 @@ export enum Layers
     AIR_ITEM,
 }
 
+export const TEXT_COLOUR = 0x655057;
+
 const collisions = new CollisionMatrix();
 collisions.addCollision(Layers.FLIPPER, Layers.BIN);
 collisions.addCollision(Layers.AIR_ITEM, Layers.TRUCK);
@@ -84,8 +86,8 @@ export class MainScene extends Scene
         super.onAdded();
 
         this.addGUIEntity(new SoundManager());
-        this.addGUIEntity(new Score(2, 2, 0));
-        this.addGUIEntity(new TimerDisplay(LD58.GAME_WIDTH - 60, 2, 0))
+        this.addGUIEntity(new Score(4, 2, 0));
+        this.addGUIEntity(new TimerDisplay(LD58.GAME_WIDTH - 52.5, 2, 0))
         this.addGlobalSystem(new TimerSystem());
         this.addGlobalSystem(new FrameTriggerSystem());
 
