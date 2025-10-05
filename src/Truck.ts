@@ -14,7 +14,7 @@ import {
 } from "lagom-engine";
 import {Flipper} from "./Flipper.ts";
 import {Layers, LD58, MainScene} from "./LD58.ts";
-import {BasePoints, ScoreComponent} from "./Score.ts";
+import {BasePoints, ScoreComponent, ScoreToast} from "./Score.ts";
 
 export class LeftFlipper extends Entity {
 
@@ -89,10 +89,10 @@ export class Truck extends Entity {
         }));
 
         // this.addComponent(new RenderCircle(0, 0, 11));
-        // this.addComponent(new RenderRect(-12, -6, 24, 2));
+        // this.addComponent(new RenderRect(-12, 0, 24, 2));
         this.addComponent(new RectCollider(MainScene.collSystem, {
             xOff: -12,
-            yOff: -6,
+            yOff: 0,
             width: 24,
             height: 2,
             layer: Layers.TRUCK
@@ -101,6 +101,7 @@ export class Truck extends Entity {
             if (data.other.layer === Layers.AIR_ITEM && data.other.parent.transform.y > caller.parent.transform.y) {
                 const points = data.other.parent.getComponent<BasePoints>(BasePoints)?.points ?? 0
                 this.scene.getEntityWithName("Scoreboard")?.getComponent<ScoreComponent>(ScoreComponent)?.addScore(points);
+                this.scene.addEntity(new ScoreToast(data.other.parent.transform.x, data.other.parent.transform.y, points))
                 data.other.parent.destroy();
             }
         });
