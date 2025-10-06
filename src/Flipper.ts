@@ -12,18 +12,18 @@ export class Flipper extends Entity
     {
         super.onAdded();
 
-        let xoff = -20;
+        let xoff = -18;
 
         if (this.side == -1) {
             xoff = 10;
         }
 
         this.addComponent(new FlipVals(this.power, this.side));
-        // this.addComponent(new RenderRect(xoff, 0, 10, 6));
+        // this.addComponent(new RenderRect(xoff, -1, 8, 6));
         this.addComponent(new RectCollider(MainScene.collSystem, {
             xOff: xoff,
-            yOff: 0,
-            width: 10,
+            yOff: -1,
+            width: 8,
             height: 6,
             layer: Layers.FLIPPER
         }))
