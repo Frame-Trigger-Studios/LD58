@@ -38,7 +38,7 @@ import {SoundManager} from "./util/SoundManager";
 import {DadTruck} from "./Truck.ts";
 import {gravSystem, rotSystem} from "./Physics.ts";
 import {Score, toastUp} from "./Score.ts";
-import {Mode7Me, mode7System} from "./Scroller.ts";
+import {HORIZON_Y, Mode7Me, mode7System} from "./Scroller.ts";
 import {GameDirector} from "./GameDirector.ts";
 import {TimerDisplay} from "./Timer";
 import {trashSpawnSystem} from "./Bin.ts";
@@ -126,7 +126,7 @@ export class MainScene extends Scene {
 
         // Add some lines so it isn't empty to start
         for (let i = 0; i < 30; i++) {
-            const roadLine = this.addEntity(new Entity("roadline", LD58.GAME_WIDTH / 2, 32 + 1 + i * 10 * 0.9, Layers.ROAD_LINE));
+            const roadLine = this.addEntity(new Entity("roadline", LD58.GAME_WIDTH / 2, HORIZON_Y + i * 10 * 0.9, Layers.ROAD_LINE));
             roadLine.addComponent(new Sprite(this.game.getResource("road_line").textureFromIndex(0),
                 {xAnchor: 0.5}));
             roadLine.addComponent(new Mode7Me(0));
@@ -138,7 +138,7 @@ export class MainScene extends Scene {
                 caller.destroy();
                 return;
             }
-            const roadLine = caller.parent.scene.addEntity(new Entity("roadline", LD58.GAME_WIDTH / 2, 32 + 1, Layers.ROAD_LINE));
+            const roadLine = caller.parent.scene.addEntity(new Entity("roadline", LD58.GAME_WIDTH / 2, HORIZON_Y, Layers.ROAD_LINE));
             roadLine.addComponent(new Sprite(caller.parent.scene.game.getResource("road_line").textureFromIndex(0),
                 {xAnchor: 0.5}));
             roadLine.addComponent(new Mode7Me(0));
