@@ -3,7 +3,7 @@ import {LD58, MainScene} from "./LD58";
 
 export async function submitScore(name: string, score: number) {
     const secret = "lol_this_is_very_secure_obviously";
-    const hash = await sha256(score + name + secret);
+    const hash = await sha256(score + secret);
 
     try {
         const resp = await fetch("https://quackqack.pythonanywhere.com/submit", {
