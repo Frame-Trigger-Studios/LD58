@@ -87,6 +87,13 @@ export class MainScene extends Scene {
     // Bad (I cant work out how to destroy a functional system).
     static gameOver: boolean = false;
 
+    constructor(game: Game) {
+        super(game);
+
+        // Reset statics. I should make a better way of doing this.
+        MainScene.gameOver = false;
+    }
+
     onAdded() {
         super.onAdded();
 

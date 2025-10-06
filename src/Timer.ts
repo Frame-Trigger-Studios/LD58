@@ -27,6 +27,8 @@ export class TimerDisplay extends Entity {
 
     constructor(x: number, y: number, depth: number) {
         super("gameTime", x, y, depth);
+
+        TimerDisplay.GAME_TIME = 99;
     }
 
     static GAME_TIME = 99;
