@@ -42,7 +42,7 @@ interface Score {
 }
 
 class NameComp extends Component {
-    letters: string[] = ["_", "_", "_"];
+    letters: string[] = "_".repeat(SubmitScore.NAME_LENGTH).split('')
     index: number = 0;
 }
 
@@ -53,6 +53,8 @@ export class SubmitScore extends Entity {
     constructor(readonly score: number) {
         super("submitter", LD58.GAME_WIDTH / 2, 0);
     }
+
+    static NAME_LENGTH = 6;
 
     onAdded() {
         super.onAdded();
@@ -78,7 +80,7 @@ export class SubmitScore extends Entity {
             fontSize: 8
         })).pixiObj.anchor.set(0.5);
 
-        this.addComponent(new TextDisp(0, 75, "Press Space\n to Submit", {
+        this.addComponent(new TextDisp(0, 75, "Press Enter\n to Submit", {
             fontFamily: "retro",
             fill: 0xf6edcd,
             fontSize: 6
@@ -89,14 +91,14 @@ export class SubmitScore extends Entity {
         const updateName = (e: KeyboardEvent) => {
             const key = e.key;
 
-            if (/^[a-zA-Z0-9]$/.test(key) && nameComp.index < 3) {
+            if (/^[a-zA-Z0-9]$/.test(key) && nameComp.index < SubmitScore.NAME_LENGTH) {
                 nameComp.letters[nameComp.index] = key;
-                nameComp.index = (nameComp.index + 1) % 4;
+                nameComp.index = (nameComp.index + 1) % (SubmitScore.NAME_LENGTH + 1);
             } else if (key === 'Backspace') {
-                nameComp.index = (nameComp.index - 1 + nameComp.letters.length) % 3;
+                nameComp.index = (nameComp.index - 1 + nameComp.letters.length) % SubmitScore.NAME_LENGTH;
                 nameComp.letters[nameComp.index] = '_';
-            } else if (key === ' ' && nameComp.index == 3) {
-                submitScore(nameComp.letters.join(''), this.score).then(success => {
+            } else if (key === 'Enter' && nameComp.index != 0) {
+                submitScore(nameComp.letters.slice(0, nameComp.index).join(''), this.score).then(success => {
                     document.removeEventListener("keydown", updateName);
                     this.destroy();
                     this.scene.addGUIEntity(new HighScores(this.score, success));
