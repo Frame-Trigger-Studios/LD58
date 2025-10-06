@@ -9,7 +9,8 @@ export async function submitScore(name: string, score: number) {
         const resp = await fetch("https://quackqack.pythonanywhere.com/submit", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({name, score, hash})
+            body: JSON.stringify({name, score, hash}),
+            signal: AbortSignal.timeout(5000)
         });
         return resp.ok
     } catch (e) {
@@ -26,7 +27,10 @@ async function sha256(message: string) {
 
 export async function getScores(): Promise<Score[] | null> {
     try {
-        const resp = await fetch("https://quackqack.pythonanywhere.com/leaderboard");
+        const resp = await fetch("https://quackqack.pythonanywhere.com/leaderboard",
+            {
+                signal: AbortSignal.timeout(5000)
+            });
         if (!resp.ok) {
             return null;
         }
