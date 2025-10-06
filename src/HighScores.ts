@@ -3,7 +3,7 @@ import {LD58, MainScene} from "./LD58";
 
 export async function submitScore(name: string, score: number) {
     const secret = "lol_this_is_very_secure_obviously";
-    const hash = await sha256(score + secret);
+    const hash = await sha256(score + name + secret);
 
     try {
         const resp = await fetch("https://quackqack.pythonanywhere.com/submit", {
@@ -46,8 +46,9 @@ interface Score {
 }
 
 class NameComp extends Component {
-    letters: string[] = "_".repeat(SubmitScore.NAME_LENGTH).split('')
-    index: number = 0;
+    static NAME_LENGTH = 6;
+    static letters: string[] = "_".repeat(NameComp.NAME_LENGTH).split('')
+    static index: number = 0;
 }
 
 class RenderName extends TextDisp {
@@ -58,7 +59,7 @@ export class SubmitScore extends Entity {
         super("submitter", LD58.GAME_WIDTH / 2, 0);
     }
 
-    static NAME_LENGTH = 6;
+
 
     onAdded() {
         super.onAdded();
@@ -96,14 +97,14 @@ export class SubmitScore extends Entity {
         const updateName = (e: KeyboardEvent) => {
             const key = e.key;
 
-            if (/^[a-zA-Z0-9]$/.test(key) && nameComp.index < SubmitScore.NAME_LENGTH) {
-                nameComp.letters[nameComp.index] = key;
-                nameComp.index = (nameComp.index + 1) % (SubmitScore.NAME_LENGTH + 1);
-            } else if (key === 'Backspace') {
-                nameComp.index = (nameComp.index - 1 + nameComp.letters.length) % SubmitScore.NAME_LENGTH;
-                nameComp.letters[nameComp.index] = '_';
-            } else if (key === 'Enter' && nameComp.index != 0) {
-                submitScore(nameComp.letters.slice(0, nameComp.index).join(''), this.score).then(success => {
+            if (/^[a-zA-Z0-9]$/.test(key) && NameComp.index < NameComp.NAME_LENGTH) {
+                NameComp.letters[NameComp.index] = key;
+                NameComp.index = (NameComp.index + 1) % (NameComp.NAME_LENGTH + 1);
+            } else if (key === 'Backspace' && NameComp.index > 0) {
+                NameComp.index = (NameComp.index - 1 + NameComp.letters.length) % NameComp.NAME_LENGTH;
+                NameComp.letters[NameComp.index] = '_';
+            } else if (key === 'Enter' && NameComp.index != 0) {
+                submitScore(NameComp.letters.slice(0, NameComp.index).join(''), this.score).then(success => {
                     document.removeEventListener("keydown", updateName);
                     this.destroy();
                     this.scene.addGUIEntity(new HighScores(this.score, success));
@@ -114,7 +115,7 @@ export class SubmitScore extends Entity {
         document.addEventListener("keydown", updateName);
 
         this.scene.addFnSystem(newSystem(types(NameComp, RenderName), (delta, entity, name, txt) => {
-            txt.pixiObj.text = name.letters.join('');
+            txt.pixiObj.text = NameComp.letters.join('');
         }));
     }
 }
