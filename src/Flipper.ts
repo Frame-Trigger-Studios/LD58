@@ -27,6 +27,9 @@ export class Flipper extends Entity
             height: 6,
             layer: Layers.FLIPPER
         }))
+        this.addComponent(new Timer(20, null)).onTrigger.register((caller, data) => {
+            caller.parent.getComponent<RectCollider>(RectCollider)?.destroy()
+        });
         this.addComponent(new Timer(100, null)).onTrigger.register((caller, data) => {
             caller.parent.destroy()
             caller.parent.scene.getEntityWithName("LeftFlipper")?.getComponent<Sprite>(Sprite)?.applyConfig({
