@@ -82,7 +82,7 @@ function queueShrub(entity: Entity) {
             xAnchor: 0.5,
             yAnchor: 1
         }));
-        shrub.addComponent(new Mode7Me(x));
+        shrub.addComponent(new Mode7Me(x, 0.5));
         queueShrub(entity);
     })
 }

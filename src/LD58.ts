@@ -39,10 +39,19 @@ import {SoundManager} from "./util/SoundManager";
 import {DadTruck} from "./Truck.ts";
 import {gravSystem, rotSystem} from "./Physics.ts";
 import {Score, toastUp} from "./Score.ts";
-import {Mode7Me, mode7System} from "./Scroller.ts";
+import {HORIZON_Y, Mode7Me, mode7System} from "./Scroller.ts";
 import {GameDirector} from "./GameDirector.ts";
 import {TimerDisplay} from "./Timer";
 import {trashSpawnSystem} from "./Bin.ts";
+
+import flip1 from "./sfx/flip1.wav";
+import flip2 from "./sfx/flip2.wav";
+import flip3 from "./sfx/flip3.wav";
+import gotRubbish1 from "./sfx/got_rubbish.wav";
+import gotRubbish2 from "./sfx/got_rubbish2.wav";
+import missedSmall from "./sfx/missed.wav";
+import missedBin from "./sfx/missed_bin.wav";
+import powerUp from "./sfx/powerUp.wav";
 
 
 export enum Layers {
@@ -89,6 +98,8 @@ export class MainScene extends Scene {
     // Bad (I cant work out how to destroy a functional system).
     static gameOver: boolean = false;
 
+    static sound: SoundManager
+
     constructor(game: Game) {
         super(game);
 
@@ -99,7 +110,7 @@ export class MainScene extends Scene {
     onAdded() {
         super.onAdded();
 
-        this.addGUIEntity(new SoundManager());
+        MainScene.sound = this.addGUIEntity(new SoundManager());
         this.addGUIEntity(new Score(4, 2, 0));
         this.addGUIEntity(new TimerDisplay(LD58.GAME_WIDTH - 52.5, 2, 0))
         this.addGlobalSystem(new TimerSystem());
@@ -119,15 +130,19 @@ export class MainScene extends Scene {
 
         // @ts-ignore
         this.addFixedFnSystem(newSystem(types(Component), (delta, entity, _) => {
-            if (entity.transform.y > LD58.GAME_HEIGHT + 100)
-            {
+            if (entity.transform.y > LD58.GAME_HEIGHT + 40) {
+                if (entity.name === "airbin") {
+                    MainScene.sound.playSound("missedBin")
+                } else if (entity.name === "airbinlid" || entity.name === "trash") {
+                    MainScene.sound.playSound("missedSmall")
+                }
                 entity.destroy();
             }
         }))
 
         // Add some lines so it isn't empty to start
         for (let i = 0; i < 30; i++) {
-            const roadLine = this.addEntity(new Entity("roadline", LD58.GAME_WIDTH / 2, 32 + 1 + i * 10 * 0.9, Layers.ROAD_LINE));
+            const roadLine = this.addEntity(new Entity("roadline", LD58.GAME_WIDTH / 2, HORIZON_Y + i * 10 * 0.9, Layers.ROAD_LINE));
             roadLine.addComponent(new Sprite(this.game.getResource("road_line").textureFromIndex(0),
                 {xAnchor: 0.5}));
             roadLine.addComponent(new Mode7Me(0));
@@ -139,7 +154,7 @@ export class MainScene extends Scene {
                 caller.destroy();
                 return;
             }
-            const roadLine = caller.parent.scene.addEntity(new Entity("roadline", LD58.GAME_WIDTH / 2, 32 + 1, Layers.ROAD_LINE));
+            const roadLine = caller.parent.scene.addEntity(new Entity("roadline", LD58.GAME_WIDTH / 2, HORIZON_Y, Layers.ROAD_LINE));
             roadLine.addComponent(new Sprite(caller.parent.scene.game.getResource("road_line").textureFromIndex(0),
                 {xAnchor: 0.5}));
             roadLine.addComponent(new Mode7Me(0));
@@ -198,6 +213,19 @@ export class LD58 extends Game {
         const music = LD58.audioAtlas.load("music", musicTrack);
         music.loop = true;
         music.volume = 0.3;
+
+        LD58.audioAtlas.load("flip1", flip1);
+        LD58.audioAtlas.load("flip2", flip2);
+        LD58.audioAtlas.load("flip3", flip3);
+
+        LD58.audioAtlas.load("gotRubbish1", gotRubbish1);
+        LD58.audioAtlas.load("gotRubbish2", gotRubbish2);
+
+        LD58.audioAtlas.load("missedSmall", missedSmall);
+        LD58.audioAtlas.load("missedBin", missedBin);
+
+        LD58.audioAtlas.load("powerUp", powerUp);
+
 
         // Import fonts. See index.html for examples of how to add new ones.
         const fonts = new Promise<void>((resolve, _) => {

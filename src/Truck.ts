@@ -127,6 +127,8 @@ export class Truck extends Entity {
                 const points = data.other.parent.getComponent<BasePoints>(BasePoints)?.points ?? 0
                 this.scene.getEntityWithName("Scoreboard")?.getComponent<ScoreComponent>(ScoreComponent)?.addScore(points);
                 this.scene.addEntity(new ScoreToast(data.other.parent.transform.x, data.other.parent.transform.y, points))
+                MainScene.sound.playSound(Util.choose("gotRubbish1", "gotRubbish2"))
+
                 this.addComponent(new ScreenShake(points / 50, 100))
                 data.other.parent.destroy();
             }
@@ -194,6 +196,10 @@ const powerSystem = newSystem(types(Charger, PowerBarProg, BarSpr), (delta, enti
     if (MainScene.gameOver) {
         return;
     }
+    if (entity.scene.game.keyboard.isKeyPressed(Key.Space)) {
+        MainScene.sound.playSound("powerUp");
+    }
+
     if (entity.scene.game.keyboard.isKeyDown(Key.Space)) {
         power.level += delta * 0.08;
 
@@ -208,6 +214,8 @@ const powerSystem = newSystem(types(Charger, PowerBarProg, BarSpr), (delta, enti
     power.level = MathUtil.clamp(power.level, 0, 100);
 
     if (entity.scene.game.keyboard.isKeyReleased(Key.Space)) {
+        MainScene.sound.stopSound("powerUp");
+        MainScene.sound.playSound(Util.choose("flip1", "flip2", "flip3"));
         entity.addChild(new Flipper(-50, 10, power.level, -1))
         entity.addChild(new Flipper(50, 10, power.level, 1))
         entity.scene.getEntityWithName("LeftFlipper")?.getComponent<Sprite>(Sprite)?.applyConfig({
