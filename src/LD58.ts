@@ -34,6 +34,7 @@ import treeSpr from "./art/tree.png";
 import shrubSpr from "./art/shrubs.png";
 import trashSpr from "./art/trash.png";
 import powerSpr from "./art/power-bar.png";
+import musicTrack from "./audio/music.mp3";
 import {SoundManager} from "./util/SoundManager";
 import {DadTruck} from "./Truck.ts";
 import {gravSystem, rotSystem} from "./Physics.ts";
@@ -209,9 +210,9 @@ export class LD58 extends Game {
         this.setScene(new Scene(this));
 
         // Import sounds and set their properties
-        // const music = LD58.audioAtlas.load("music", "ADD_ME")
-        //     .loop(true)
-        //     .volume(0.3);
+        const music = LD58.audioAtlas.load("music", musicTrack);
+        music.loop = true;
+        music.volume = 0.3;
 
         LD58.audioAtlas.load("flip1", flip1);
         LD58.audioAtlas.load("flip2", flip2);
