@@ -147,7 +147,7 @@ export class HighScores extends Entity {
             fontSize: 4
         })).pixiObj.anchor.set(0.5);
 
-        if (!this.submitSuccess || true) {
+        if (!this.submitSuccess) {
             this.addComponent(new TextDisp(0, 73, "Failed to submit score", {
                 fontFamily: "retro",
                 fill: 0xe2a97e,
