@@ -34,6 +34,7 @@ import treeSpr from "./art/tree.png";
 import shrubSpr from "./art/shrubs.png";
 import trashSpr from "./art/trash.png";
 import powerSpr from "./art/power-bar.png";
+import musicTrack from "./audio/music.mp3";
 import {SoundManager} from "./util/SoundManager";
 import {DadTruck} from "./Truck.ts";
 import {gravSystem, rotSystem} from "./Physics.ts";
@@ -209,21 +210,30 @@ export class LD58 extends Game {
         this.setScene(new Scene(this));
 
         // Import sounds and set their properties
-        // const music = LD58.audioAtlas.load("music", "ADD_ME")
-        //     .loop(true)
-        //     .volume(0.3);
+        const music = LD58.audioAtlas.load("music", musicTrack);
+        music.loop = true;
+        music.volume = 0.3;
 
-        LD58.audioAtlas.load("flip1", flip1);
-        LD58.audioAtlas.load("flip2", flip2);
-        LD58.audioAtlas.load("flip3", flip3);
+        const flip1Sound = LD58.audioAtlas.load("flip1", flip1);
+        const flip2Sound = LD58.audioAtlas.load("flip2", flip2);
+        const flip3Sound = LD58.audioAtlas.load("flip3", flip3);
 
-        LD58.audioAtlas.load("gotRubbish1", gotRubbish1);
-        LD58.audioAtlas.load("gotRubbish2", gotRubbish2);
 
-        LD58.audioAtlas.load("missedSmall", missedSmall);
-        LD58.audioAtlas.load("missedBin", missedBin);
+        const gotRubbish1Sounds = LD58.audioAtlas.load("gotRubbish1", gotRubbish1);
+        const gotRubbish2Sounds = LD58.audioAtlas.load("gotRubbish2", gotRubbish2);
 
-        LD58.audioAtlas.load("powerUp", powerUp);
+        const missedSmallSound = LD58.audioAtlas.load("missedSmall", missedSmall);
+        const missedBinSound = LD58.audioAtlas.load("missedBin", missedBin);
+
+        const powerupSound = LD58.audioAtlas.load("powerUp", powerUp);
+        gotRubbish1Sounds.volume =
+            gotRubbish2Sounds.volume =
+                missedSmallSound.volume =
+                    missedBinSound.volume =
+                        flip1Sound.volume =
+                            flip2Sound.volume =
+                                flip3Sound.volume =
+                                    powerupSound.volume = 0.25;
 
 
         // Import fonts. See index.html for examples of how to add new ones.
