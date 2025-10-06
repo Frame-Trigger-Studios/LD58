@@ -36,7 +36,7 @@ export class BinLid extends Entity {
 
 export class AirBinLid extends Entity {
     constructor(x: number, y: number, readonly phys: Phys, readonly variant: number, readonly scale: number) {
-        super("binlid", x, y, Layers.AIR_ITEM);
+        super("airbinlid", x, y, Layers.AIR_ITEM);
     }
 
     onAdded() {
