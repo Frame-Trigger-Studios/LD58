@@ -137,12 +137,12 @@ export class Bin extends Entity {
 
         const lid = this.scene.addEntity(new BinLid(this.transform.x, this.transform.y, this.inLayer + 0.00001));
 
-        // this.addComponent(new RenderRect(-3, -4, 5, 9))
+        // this.addComponent(new RenderRect(-3, -5, 5, 10))
         this.addComponent(new RectCollider(MainScene.collSystem, {
             xOff: -3,
-            yOff: -4,
+            yOff: -5,
             width: 5,
-            height: 9,
+            height: 10,
             layer: Layers.BIN
         })).onTriggerEnter.register((caller, data) => {
             if (data.other.layer === Layers.FLIPPER) {
